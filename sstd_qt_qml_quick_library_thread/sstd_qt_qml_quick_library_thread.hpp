@@ -34,7 +34,7 @@ namespace sstd {
         virtual ~ThreadYieldObject();
         ThreadYieldObject(std::size_t=1024uLL*1024uLL*64);
     public:
-        void yield( QObject * );
+        void yield(QObject*);
     protected:
         virtual void doRun() = 0;
     private:

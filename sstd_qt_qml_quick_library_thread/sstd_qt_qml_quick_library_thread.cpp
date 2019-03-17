@@ -32,7 +32,6 @@ namespace sstd {
             boost::context::protected_fixedsize_stack{ argStackSize },
             [this](fiber_t && f)->fiber_t {
             thisPrivate->functionFiber = &f;
-            f = std::move(f).resume();
             this->run();
             return std::move(f);
         });
@@ -44,13 +43,25 @@ namespace sstd {
     }
 
     void ThreadYieldObject::yield(QObject * arg) {
+
         if (arg == nullptr) {
             return;
         }
-        QMetaObject::invokeMethod(arg, [varThis = this->shared_from_this()]() {
-            auto varPrivate = varThis->thisPrivate;
-            (*(varPrivate->fiber)) = std::move(*(varPrivate->fiber)).resume();
-        }, Qt::QueuedConnection);
+
+        auto varCaller =
+            getThreadObject(QThread::currentThread());
+
+        assert(varCaller);
+        
+        QMetaObject::invokeMethod(varCaller, [varThis = this->shared_from_this(),arg=arg]() {/*加入当前线程队列*/
+            QMetaObject::invokeMethod(arg, [varThis]() {/*加入目标线程队列*/
+                auto varPrivate = varThis->thisPrivate;
+                (*(varPrivate->fiber)) = std::move(*(varPrivate->fiber)).resume();
+            }, Qt::QueuedConnection);
+        },Qt::QueuedConnection);
+
+        (*(thisPrivate->functionFiber)) = std::move(*(thisPrivate->functionFiber)).resume();
+
     }
 
     void ThreadYieldObject::run() noexcept {
