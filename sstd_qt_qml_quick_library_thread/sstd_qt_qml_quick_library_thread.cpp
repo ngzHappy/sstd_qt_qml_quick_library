@@ -24,7 +24,7 @@ namespace sstd {
             return nullptr;
         }
 
-        if(!arg->isRunning() ){
+        if( arg->isFinished() ){
             return nullptr;
         }
 
