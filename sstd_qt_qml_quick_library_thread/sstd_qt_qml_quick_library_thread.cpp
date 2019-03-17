@@ -24,6 +24,10 @@ namespace sstd {
             return nullptr;
         }
 
+        if(!arg->isRunning() ){
+            return nullptr;
+        }
+
         union {
             QObjectUserData * varAns;
             ThreadObject * varAnsObject;
@@ -55,9 +59,6 @@ namespace sstd {
     }
 
 }/*namespace sstd*/
-
-
-
 
 namespace _theSSTDLibraryMemoryFile {
 
