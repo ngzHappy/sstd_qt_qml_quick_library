@@ -48,17 +48,27 @@ namespace sstd {
             return;
         }
 
-        auto varCaller =
-            getThreadObject(QThread::currentThread());
+        auto varCurrentThread = QThread::currentThread();
+        auto varTargetThread = arg->thread();
 
-        assert(varCaller);
-        
-        QMetaObject::invokeMethod(varCaller, [varThis = this->shared_from_this(),arg=arg]() {/*加入当前线程队列*/
-            QMetaObject::invokeMethod(arg, [varThis]() {/*加入目标线程队列*/
+        if (varTargetThread != varCurrentThread) {
+            /*目标线程与当前线程不同*/
+            auto varCaller =
+                getThreadObject(varCurrentThread);
+            assert(varCaller);
+            QMetaObject::invokeMethod(varCaller, [varThis = this->shared_from_this(), arg = arg]() {/*加入当前线程队列*/
+                QMetaObject::invokeMethod(arg, [varThis]() {/*加入目标线程队列*/
+                    auto varPrivate = varThis->thisPrivate;
+                    (*(varPrivate->fiber)) = std::move(*(varPrivate->fiber)).resume();
+                }, Qt::QueuedConnection);
+            }, Qt::QueuedConnection);
+        } else {
+            /*目标线程就是当前线程*/
+            QMetaObject::invokeMethod(arg, [varThis = this->shared_from_this()]() {/*加入当前线程队列*/
                 auto varPrivate = varThis->thisPrivate;
                 (*(varPrivate->fiber)) = std::move(*(varPrivate->fiber)).resume();
             }, Qt::QueuedConnection);
-        },Qt::QueuedConnection);
+        }
 
         (*(thisPrivate->functionFiber)) = std::move(*(thisPrivate->functionFiber)).resume();
 
