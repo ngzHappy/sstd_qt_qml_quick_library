@@ -1,6 +1,8 @@
 
 TEMPLATE = lib
 
+DEFINES *= SSTD_QT_BUILD_SOURCE
+
 CONFIG(debug,debug|release){
     TARGET = sstd_qt_qml_quick_library_debug
 }else{

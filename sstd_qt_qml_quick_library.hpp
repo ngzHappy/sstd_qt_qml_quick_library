@@ -2,7 +2,8 @@
 
 #include "global_sstd_qt_qml_quick_library.hpp"
 
-
+namespace _theSSTDQtQmlQuickLibraryFile {
+}/*_theSSTDQtQmlQuickLibraryFile*/
 
 
 
