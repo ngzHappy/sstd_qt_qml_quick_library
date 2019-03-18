@@ -109,25 +109,26 @@ namespace sstd {
             ThreadObject * varAnsObject;
         };
 
+        auto & varMutex = _theSSTDLibraryMemoryFile::getThreadObjectMutex(arg);
+        const auto varID = _theSSTDLibraryMemoryFile::threadObjectID();
+
         {
-            std::shared_lock varReadLock{
-                _theSSTDLibraryMemoryFile::getThreadObjectMutex(arg) };
-            varAns = arg->userData(_theSSTDLibraryMemoryFile::threadObjectID());
+            std::shared_lock varReadLock{ varMutex };
+            varAns = arg->userData(varID);
             if (varAns) {
                 return static_cast<ThreadObject *>(varAns);
             }
         }
 
         {
-            std::unique_lock varWriteLock{
-                _theSSTDLibraryMemoryFile::getThreadObjectMutex(arg) };
-            varAns = arg->userData(_theSSTDLibraryMemoryFile::threadObjectID());
+            std::unique_lock varWriteLock{ varMutex };
+            varAns = arg->userData(varID);
             if (varAns) {
                 return static_cast<ThreadObject *>(varAns);
             }
             varAnsObject = sstd_new<ThreadObject>();
             varAnsObject->moveToThread(arg);
-            arg->setUserData(_theSSTDLibraryMemoryFile::threadObjectID(), varAnsObject);
+            arg->setUserData(varID, varAnsObject);
         }
 
         return varAnsObject;
