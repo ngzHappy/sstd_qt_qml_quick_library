@@ -36,9 +36,8 @@ namespace sstd {
             this->run();
             return std::move(f);
         });
-        
-        std::unique_lock varLock{ thisPrivate->fiberMutex };
-        (*(thisPrivate->fiber)) = std::move(*(thisPrivate->fiber)).resume();
+
+        this->directResume();
 
     }
 
@@ -46,20 +45,27 @@ namespace sstd {
         delete thisPrivate;
     }
 
+    void ThreadYieldObject::directResume() {/*将执行权交给执行者*/
+        std::unique_lock varLock{ thisPrivate->fiberMutex };
+        (*(thisPrivate->fiber)) = std::move(*(thisPrivate->fiber)).resume();
+    }
+
+    void ThreadYieldObject::directYield() {/*将执行权交给调用者*/
+        (*(thisPrivate->functionFiber)) = std::move(*(thisPrivate->functionFiber)).resume();
+    }
+
     void ThreadYieldObject::yield(QObject * arg) {
 
         if (arg == nullptr) {
+            directYield();
             return;
         }
 
-        /*目标线程就是当前线程*/
-        QMetaObject::invokeMethod(arg, [varThis = this->shared_from_this()]() {/*加入当前线程队列*/
-            auto varPrivate = varThis->thisPrivate;
-            std::unique_lock varLock{ varPrivate->fiberMutex };
-            (*(varPrivate->fiber)) = std::move(*(varPrivate->fiber)).resume();
+        QMetaObject::invokeMethod(arg, [varThis = this->shared_from_this()]() {
+            varThis->directResume();
         }, Qt::QueuedConnection);
 
-        (*(thisPrivate->functionFiber)) = std::move(*(thisPrivate->functionFiber)).resume();
+        directYield();
 
     }
 

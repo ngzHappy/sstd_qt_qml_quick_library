@@ -38,6 +38,9 @@ namespace sstd {
     protected:
         virtual void doRun() = 0;
     private:
+        void directResume();
+        void directYield();
+    private:
         sstd_class(ThreadYieldObject);
     };
 
