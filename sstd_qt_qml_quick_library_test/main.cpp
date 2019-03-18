@@ -50,9 +50,18 @@ private:
 
 inline static void test_run_in_thread(){
 
-    auto varTestThread =
-        sstd_make_shared<ThreadObject>();
-    varTestThread->start();
+    {
+        /*测试执行*/
+        auto varTestThread =
+            sstd_make_shared<ThreadObject>();
+        varTestThread->start();
+    }
+
+    {
+        /*测试只构造不执行*/
+        auto varTestThread =
+            sstd_make_shared<ThreadObject>();
+    }
 
 }
 
