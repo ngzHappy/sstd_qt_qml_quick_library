@@ -23,27 +23,27 @@ namespace sstd {
 
     SSTD_QT_SYMBOL_DECL ThreadObject * getThreadObject(QThread *);
 
-    class ThreadYieldObjectPrivate;
-    class SSTD_QT_SYMBOL_DECL ThreadYieldObject :
-        public std::enable_shared_from_this< ThreadYieldObject > {
-        sstd_delete_copy_create(ThreadYieldObject);
+    class YieldToObjectThreadPrivate;
+    class SSTD_QT_SYMBOL_DECL YieldToObjectThread :
+        public std::enable_shared_from_this< YieldToObjectThread > {
+        sstd_delete_copy_create(YieldToObjectThread);
     private:
-        ThreadYieldObjectPrivate * const thisPrivate;
+        YieldToObjectThreadPrivate * const thisPrivate;
     public:
-        void run() noexcept;
-        virtual ~ThreadYieldObject();
-        ThreadYieldObject(std::size_t = 1024uLL * 1024uLL * 64uLL);
-    public:
+        virtual ~YieldToObjectThread();
+        YieldToObjectThread(std::size_t = 1024uLL * 1024uLL * 64uLL);
+    protected:
         /*如果target所在线程就是当前线程则继续执行，
         否则切换到target线程执行*/
-        void yield(QObject*target) noexcept;
+        void yieldToObjectThread(QObject*target) noexcept;
     protected:
         virtual void doRun() = 0;
     private:
         void directResume() noexcept;
         void directYield() noexcept;
+        void directRun() noexcept;
     private:
-        sstd_class(ThreadYieldObject);
+        sstd_class(YieldToObjectThread);
     };
 
 

@@ -15,25 +15,25 @@ namespace _theSSTDLibraryMemoryFile {
 
 namespace sstd {
 
-    class ThreadYieldObjectPrivate {
+    class YieldToObjectThreadPrivate {
     public:
         using fiber_t = boost::context::fiber;
         std::mutex fiberMutex;
         std::optional< fiber_t > fiber;
         fiber_t * functionFiber{ nullptr };
     private:
-        sstd_class(ThreadYieldObjectPrivate);
+        sstd_class(YieldToObjectThreadPrivate);
     };
 
-    ThreadYieldObject::ThreadYieldObject(std::size_t argStackSize) :
-        thisPrivate(sstd_new<ThreadYieldObjectPrivate>()) {
-        using fiber_t = ThreadYieldObjectPrivate::fiber_t;
+    YieldToObjectThread::YieldToObjectThread(std::size_t argStackSize) :
+        thisPrivate(sstd_new<YieldToObjectThreadPrivate>()) {
+        using fiber_t = YieldToObjectThreadPrivate::fiber_t;
         thisPrivate->fiber.emplace(
             std::allocator_arg,
             boost::context::protected_fixedsize_stack{ argStackSize },
             [this](fiber_t && f)->fiber_t {
             thisPrivate->functionFiber = &f;
-            this->run();
+            this->directRun();
             return std::move(f);
         });
 
@@ -41,25 +41,25 @@ namespace sstd {
 
     }
 
-    ThreadYieldObject::~ThreadYieldObject() {
+    YieldToObjectThread::~YieldToObjectThread() {
         delete thisPrivate;
     }
 
     /*在同一时刻只能有一个调用者,也只能有一个执行者*/
-    void ThreadYieldObject::directResume() noexcept {/*将执行权交给执行者*/
+    void YieldToObjectThread::directResume() noexcept {/*将执行权交给执行者*/
         std::unique_lock varLock{ thisPrivate->fiberMutex };
         assert(thisPrivate->fiber);
         assert(*(thisPrivate->fiber));
         (*(thisPrivate->fiber)) = std::move(*(thisPrivate->fiber)).resume();
     }
 
-    void ThreadYieldObject::directYield() noexcept {/*将执行权交给调用者*/
+    void YieldToObjectThread::directYield() noexcept {/*将执行权交给调用者*/
         assert(thisPrivate->functionFiber);
         assert(*(thisPrivate->functionFiber));
         (*(thisPrivate->functionFiber)) = std::move(*(thisPrivate->functionFiber)).resume();
     }
 
-    void ThreadYieldObject::yield(QObject * arg) noexcept {
+    void YieldToObjectThread::yieldToObjectThread(QObject * arg) noexcept {
 
         assert(arg);
 
@@ -68,6 +68,7 @@ namespace sstd {
             return;
         }
 
+        /*切换调用线程*/
         QMetaObject::invokeMethod(arg, [varThis = this->shared_from_this()]() {
             varThis->directResume();
         }, Qt::QueuedConnection);
@@ -76,7 +77,7 @@ namespace sstd {
 
     }
 
-    void ThreadYieldObject::run() noexcept {
+    void YieldToObjectThread::directRun() noexcept {
         sstd_try{
             this->doRun();
         }sstd_catch(...) {
@@ -84,7 +85,7 @@ namespace sstd {
         }
     }
 
-    void ThreadYieldObject::doRun() {
+    void YieldToObjectThread::doRun() {
     }
 
     ThreadObject::ThreadObject() {
