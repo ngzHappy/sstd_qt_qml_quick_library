@@ -36,9 +36,10 @@ namespace sstd {
             this->directRun();
             return std::move(f);
         });
+    }
 
-        this->directResume();
-
+    void YieldToObjectThread::start() noexcept {
+        directResume();
     }
 
     YieldToObjectThread::~YieldToObjectThread() {

@@ -32,6 +32,8 @@ namespace sstd {
     public:
         virtual ~YieldToObjectThread();
         YieldToObjectThread(std::size_t = 1024uLL * 1024uLL * 64uLL);
+    public:
+        void start() noexcept;
     protected:
         /*如果target所在线程就是当前线程则继续执行，
         否则切换到target线程执行*/
