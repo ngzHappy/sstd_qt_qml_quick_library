@@ -115,9 +115,10 @@ namespace sstd {
         {
             std::shared_lock varReadLock{ varMutex };
             varAns = arg->userData(varID);
-            if (varAns) {
-                return static_cast<ThreadObject *>(varAns);
-            }
+        }
+
+        if (varAns) {
+            return static_cast<ThreadObject *>(varAns);
         }
 
         {
