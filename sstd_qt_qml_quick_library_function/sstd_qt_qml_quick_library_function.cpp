@@ -48,13 +48,13 @@ namespace sstd {
         }
     }
 
-    void YieldResumeFunction::directYield() noexcept{
+    void YieldResumeFunction::directResume() noexcept{
         assert(thisPrivate->fiber);
         assert(*(thisPrivate->fiber));
         *(thisPrivate->fiber)=std::move(*(thisPrivate->fiber)).resume();
     }
 
-    void YieldResumeFunction::directResume() noexcept{
+    void YieldResumeFunction::directYield() noexcept{
         assert(thisPrivate->fiberFunction);
         assert(*(thisPrivate->fiberFunction));
         *(thisPrivate->fiberFunction)=std::move(*(thisPrivate->fiberFunction)).resume();
