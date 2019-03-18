@@ -62,6 +62,7 @@ namespace sstd {
     void YieldToObjectThread::yieldToObjectThread(QObject * arg) noexcept {
 
         assert(arg);
+        assert(this->shared_from_this());
 
         if (QThread::currentThread() == arg->thread()) {
             /*继续执行*/
