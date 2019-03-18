@@ -45,19 +45,26 @@ namespace sstd {
         delete thisPrivate;
     }
 
-    void ThreadYieldObject::directResume() {/*将执行权交给执行者*/
+    /*在同一时刻只能有一个调用者,也只能有一个执行者*/
+    void ThreadYieldObject::directResume() noexcept {/*将执行权交给执行者*/
         std::unique_lock varLock{ thisPrivate->fiberMutex };
+        assert(thisPrivate->fiber);
+        assert(*(thisPrivate->fiber));
         (*(thisPrivate->fiber)) = std::move(*(thisPrivate->fiber)).resume();
     }
 
-    void ThreadYieldObject::directYield() {/*将执行权交给调用者*/
+    void ThreadYieldObject::directYield() noexcept {/*将执行权交给调用者*/
+        assert(thisPrivate->functionFiber);
+        assert(*(thisPrivate->functionFiber));
         (*(thisPrivate->functionFiber)) = std::move(*(thisPrivate->functionFiber)).resume();
     }
 
-    void ThreadYieldObject::yield(QObject * arg) {
+    void ThreadYieldObject::yield(QObject * arg) noexcept {
 
-        if (arg == nullptr) {
-            directYield();
+        assert(arg);
+
+        if (QThread::currentThread() == arg->thread()) {
+            /*继续执行*/
             return;
         }
 
