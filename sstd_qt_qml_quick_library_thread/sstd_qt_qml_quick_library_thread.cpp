@@ -18,6 +18,7 @@ namespace sstd {
     class ThreadYieldObjectPrivate {
     public:
         using fiber_t = boost::context::fiber;
+        std::mutex fiberMutex;
         std::optional< fiber_t > fiber;
         fiber_t * functionFiber{ nullptr };
     private:
@@ -35,7 +36,10 @@ namespace sstd {
             this->run();
             return std::move(f);
         });
+        
+        std::unique_lock varLock{ thisPrivate->fiberMutex };
         (*(thisPrivate->fiber)) = std::move(*(thisPrivate->fiber)).resume();
+
     }
 
     ThreadYieldObject::~ThreadYieldObject() {
@@ -48,27 +52,12 @@ namespace sstd {
             return;
         }
 
-        auto varCurrentThread = QThread::currentThread();
-        auto varTargetThread = arg->thread();
-
-        if (varTargetThread != varCurrentThread) {
-            /*目标线程与当前线程不同*/
-            auto varCaller =
-                getThreadObject(varCurrentThread);
-            assert(varCaller);
-            QMetaObject::invokeMethod(varCaller, [varThis = this->shared_from_this(), arg = arg]() {/*加入当前线程队列*/
-                QMetaObject::invokeMethod(arg, [varThis]() {/*加入目标线程队列*/
-                    auto varPrivate = varThis->thisPrivate;
-                    (*(varPrivate->fiber)) = std::move(*(varPrivate->fiber)).resume();
-                }, Qt::QueuedConnection);
-            }, Qt::QueuedConnection);
-        } else {
-            /*目标线程就是当前线程*/
-            QMetaObject::invokeMethod(arg, [varThis = this->shared_from_this()]() {/*加入当前线程队列*/
-                auto varPrivate = varThis->thisPrivate;
-                (*(varPrivate->fiber)) = std::move(*(varPrivate->fiber)).resume();
-            }, Qt::QueuedConnection);
-        }
+        /*目标线程就是当前线程*/
+        QMetaObject::invokeMethod(arg, [varThis = this->shared_from_this()]() {/*加入当前线程队列*/
+            auto varPrivate = varThis->thisPrivate;
+            std::unique_lock varLock{ varPrivate->fiberMutex };
+            (*(varPrivate->fiber)) = std::move(*(varPrivate->fiber)).resume();
+        }, Qt::QueuedConnection);
 
         (*(thisPrivate->functionFiber)) = std::move(*(thisPrivate->functionFiber)).resume();
 
