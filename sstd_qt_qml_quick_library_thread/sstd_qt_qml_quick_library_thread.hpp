@@ -17,6 +17,9 @@ namespace sstd {
     public:
         ThreadObject();
         ~ThreadObject();
+    public:
+        using Mutex = std::shared_mutex;
+        static Mutex & getThreadObjectMutex(QThread*);
     private:
         sstd_class(ThreadObject);
     };

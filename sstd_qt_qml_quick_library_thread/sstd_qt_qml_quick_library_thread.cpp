@@ -7,7 +7,7 @@
 
 namespace _theSSTDLibraryMemoryFile {
 
-    using Mutex = std::shared_mutex;
+    using Mutex = sstd::ThreadObject::Mutex;
     inline uint threadObjectID();
     inline Mutex & getThreadObjectMutex(QThread *);
 
@@ -85,6 +85,10 @@ namespace sstd {
         }sstd_catch(...) {
             sstd_on_exception();
         }
+    }
+
+    ThreadObject::Mutex & ThreadObject::getThreadObjectMutex(QThread* arg) {
+        return _theSSTDLibraryMemoryFile::getThreadObjectMutex(arg);
     }
 
     ThreadObject::ThreadObject() {
