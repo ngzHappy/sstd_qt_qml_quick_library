@@ -1,6 +1,8 @@
 
 TEMPLATE = app
 
+CONFIG += console
+
 CONFIG(debug,debug|release){
     TARGET = sstd_qt_qml_quick_library_test_debug
 }else{
