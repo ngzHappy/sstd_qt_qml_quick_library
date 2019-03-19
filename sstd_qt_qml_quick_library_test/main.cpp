@@ -80,9 +80,10 @@ protected:
            bindFunctionWithThis( [varReply, &varBaiduData, this]() {
             varReply->deleteLater();
             varBaiduData = varReply->readAll();
-            this->resume();
+            sstd_function_resume();
         }));
-        this->yield();
+
+        sstd_function_yield();
 
         if (varBaiduData) {
             qDebug() << QStringLiteral(R"(get baidu : )") << (*varBaiduData).size() ;
@@ -118,11 +119,8 @@ protected:
             throw 12345;
              
         }));
-        this->yield();
 
-        if (this->hasExceptoin()) {
-            return;
-        }
+        sstd_function_yield();
 
         //throw 342342;
 
