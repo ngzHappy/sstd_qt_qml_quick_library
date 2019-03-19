@@ -80,7 +80,6 @@ protected:
            bindFunctionWithThis( [varReply, &varBaiduData, this]() {
             varReply->deleteLater();
             varBaiduData = varReply->readAll();
-            sstd_function_resume();
         }));
 
         sstd_function_yield();
