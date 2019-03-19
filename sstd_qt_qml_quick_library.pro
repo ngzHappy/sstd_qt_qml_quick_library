@@ -19,17 +19,3 @@ HEADERS += $$PWD/global_sstd_qt_qml_quick_library.hpp
 
 SOURCES += $$PWD/sstd_qt_qml_quick_library_thread/sstd_qt_qml_quick_library_thread.cpp
 HEADERS += $$PWD/sstd_qt_qml_quick_library_thread/sstd_qt_qml_quick_library_thread.hpp
-
-HEADERS += $$PWD/sstd_qt_qml_quick_library_function/sstd_qt_qml_quick_library_function.hpp
-SOURCES += $$PWD/sstd_qt_qml_quick_library_function/sstd_qt_qml_quick_library_function.cpp
-
-
-
-
-
-
-
-
-
-
-
