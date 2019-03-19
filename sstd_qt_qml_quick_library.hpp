@@ -7,6 +7,9 @@ namespace _theSSTDQtQmlQuickLibraryFile {
 #include <QtQml/QtQml>
 #include <QtCore/QtCore>
 #include <QtQuick/QtQuick>
+#include <QtWidgets/QtWidgets>
+#include <QtNetwork/QtNetwork>
+#include <QtConcurrent/QtConcurrent>
 #include <QtQuickControls2/QtQuickControls2>
 
 #include "global_sstd_qt_qml_quick_library.hpp"
