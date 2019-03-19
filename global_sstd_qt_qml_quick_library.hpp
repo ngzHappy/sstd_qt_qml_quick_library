@@ -8,3 +8,22 @@
 #define SSTD_QT_SYMBOL_DECL SSTD_SYMBOL_IMPORT
 #endif
 
+
+namespace sstd {
+
+    class DeleteLater{
+    public:
+        template<typename T>
+        inline void operator()(T * arg) const noexcept {
+            arg->deleteLater();
+        }
+    };
+
+}/*namespace sstd*/
+
+template<typename T,typename ... Args >
+inline std::unique_ptr< T , sstd::DeleteLater > sstd_make_deletelater_virtual(Args && ... args){
+    return std::unique_ptr< T , sstd::DeleteLater >{
+        sstd_virtual_new<T>(std::forward<Args>(args)...) };
+}
+
