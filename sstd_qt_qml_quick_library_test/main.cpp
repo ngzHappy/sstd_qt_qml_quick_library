@@ -77,7 +77,7 @@ protected:
         std::optional< QByteArray > varBaiduData;
 
         QObject::connect(varReply, &QNetworkReply::finished,
-            [varReply, &varBaiduData, this, varLock = this->shared_from_this()]() {
+            [varReply, &varBaiduData, this, varLock = copyThisToAnotherStack()]() {
             varReply->deleteLater();
             varBaiduData = varReply->readAll();
             this->resume();
@@ -91,13 +91,27 @@ protected:
         }
 
     }
+
+public:
+    inline virtual ~GetBaidu(){
+        std::cout  << __func__ << std::endl;
+    }
+
+
 };
 
 inline static void get_baidu() {
 
-    auto var =
-        sstd_make_start_function<GetBaidu>();
-    var();
+    {
+        auto var =
+            sstd_make_start_function<GetBaidu>();
+        var();
+    }
+
+    {
+        auto var =
+            sstd_make_start_function<GetBaidu>();
+    }
 
 }
 

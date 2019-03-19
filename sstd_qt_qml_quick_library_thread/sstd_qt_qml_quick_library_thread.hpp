@@ -31,6 +31,7 @@ namespace sstd {
         public YieldFunctionBasic,
         public std::enable_shared_from_this< YieldToObjectThread > {
         sstd_delete_copy_create(YieldToObjectThread);
+        using shared_super = std::enable_shared_from_this< YieldToObjectThread >;
     private:
         YieldToObjectThreadPrivate * const thisPrivate;
     public:
@@ -44,9 +45,14 @@ namespace sstd {
         void yieldToObjectThread(QObject*target) noexcept;
     protected:
         void directRun() noexcept override;
+        /*拷贝到当前栈区会形成循环引用*/
+        std::shared_ptr<YieldToObjectThread> copyThisToAnotherStack() noexcept ;
     private:
         void directYield() noexcept;
         void directResume() noexcept;
+    private:
+        using shared_super::shared_from_this;
+        using shared_super::weak_from_this;
     private:
         sstd_class(YieldToObjectThread);
     };
