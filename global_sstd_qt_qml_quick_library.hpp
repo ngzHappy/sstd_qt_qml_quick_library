@@ -15,7 +15,9 @@ namespace sstd {
     public:
         template<typename T>
         inline void operator()(T * arg) const noexcept {
-            arg->deleteLater();
+            if (!arg->parent()) {
+                arg->deleteLater();
+            }
         }
     };
 
