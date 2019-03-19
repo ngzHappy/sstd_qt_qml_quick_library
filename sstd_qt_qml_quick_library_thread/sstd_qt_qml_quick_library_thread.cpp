@@ -87,10 +87,6 @@ namespace sstd {
         }
     }
 
-    std::shared_ptr<YieldToObjectThread> YieldToObjectThread::copyThisToAnotherStack() noexcept {
-        return shared_super::shared_from_this();
-    }
-
     ThreadObject::Mutex & ThreadObject::getThreadObjectMutex(QThread* arg) {
         return _theSSTDLibraryMemoryFile::getThreadObjectMutex(arg);
     }

@@ -39,11 +39,6 @@ namespace sstd {
         YieldToObjectThread(std::size_t = 1024uLL * 1024uLL * 64uLL);
     public:
         void start() noexcept;
-        template<typename T>
-        using BindDataFunction = BindDataWithFunction< std::shared_ptr<const void>,std::remove_cv_t< std::remove_reference_t<T> > >;
-    protected:
-        template<typename T>
-        inline BindDataFunction<T> bindFunctionWithThis(T &&) const noexcept;
     protected:
         /*如果target所在线程就是当前线程则继续执行，
         否则切换到target线程执行*/
@@ -56,16 +51,10 @@ namespace sstd {
     private:
         using shared_super::shared_from_this;
         using shared_super::weak_from_this;
-        /*拷贝到当前栈区会形成循环引用*/
-        std::shared_ptr<YieldToObjectThread> copyThisToAnotherStack() noexcept ;
     private:
         sstd_class(YieldToObjectThread);
     };
 
-    template<typename T>
-    inline YieldToObjectThread::BindDataFunction<T> YieldToObjectThread::bindFunctionWithThis(T && arg) const noexcept {
-        return { const_cast<YieldToObjectThread*>(this)->copyThisToAnotherStack() , std::forward<T>(arg) };
-    }
 
 }/*namespace sstd*/
 

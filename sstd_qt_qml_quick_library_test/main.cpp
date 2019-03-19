@@ -77,11 +77,11 @@ protected:
         std::optional< QByteArray > varBaiduData;
 
         QObject::connect(varReply, &QNetworkReply::finished,
-            [varReply, &varBaiduData, this, varLock = copyThisToAnotherStack()]() {
+           bindFunctionWithThis( [varReply, &varBaiduData, this]() {
             varReply->deleteLater();
             varBaiduData = varReply->readAll();
             this->resume();
-        });
+        }));
         this->yield();
 
         if (varBaiduData) {
