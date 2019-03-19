@@ -83,7 +83,7 @@ namespace sstd {
         sstd_try{
             this->doRun();
         }sstd_catch(...) {
-            sstd_on_exception();
+            this->doException();
         }
     }
 

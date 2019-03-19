@@ -100,17 +100,66 @@ public:
 
 };
 
+
+class GetBaiduTestException final : public sstd::YieldResumeFunction {
+protected:
+    inline void doRun() override {
+
+        auto varManager= sstd_make_deletelater_virtual_unique< QNetworkAccessManager >();
+
+        QNetworkRequest varBaidu{ QStringLiteral(R"(http://www.baidu.com)") };
+
+        auto varReply = varManager->get(varBaidu);
+        std::optional< QByteArray > varBaiduData;
+
+        QObject::connect(varReply, &QNetworkReply::finished,
+           bindFunctionWithThis( [varReply,this]() {
+            varReply->deleteLater();
+            throw 12345;
+             
+        }));
+        this->yield();
+
+        if (this->hasExceptoin()) {
+            return;
+        }
+
+        //throw 342342;
+
+        if (varBaiduData) {
+            qDebug() << QStringLiteral(R"(get baidu : )") << (*varBaiduData).size() ;
+        } else {
+            qDebug() << QStringLiteral(R"(thre is some error when get http://www.baidu.com)");
+        }
+
+    }
+
+public:
+    inline virtual ~GetBaiduTestException(){
+        std::cout  << __func__ << std::endl;
+    }
+
+
+};
+
 inline static void get_baidu() {
 
-    {
+    if constexpr(false){
         auto var =
             sstd_make_start_function<GetBaidu>();
         var();
     }
 
-    {
+    if constexpr (false) {
         auto var =
             sstd_make_start_function<GetBaidu>();
+    }
+
+    {
+        auto var =
+                sstd_make_start_function<GetBaiduTestException>();
+        auto var1 = var;
+        var1();
     }
 
 }
