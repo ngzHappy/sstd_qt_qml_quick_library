@@ -25,6 +25,7 @@ namespace sstd {
 
     class YieldToObjectThreadPrivate;
     class SSTD_QT_SYMBOL_DECL YieldToObjectThread :
+        public YieldFunctionBasic,
         public std::enable_shared_from_this< YieldToObjectThread > {
         sstd_delete_copy_create(YieldToObjectThread);
     private:
@@ -38,8 +39,6 @@ namespace sstd {
         /*如果target所在线程就是当前线程则继续执行，
         否则切换到target线程执行*/
         void yieldToObjectThread(QObject*target) noexcept;
-    protected:
-        virtual void doRun() = 0;
     private:
         void directResume() noexcept;
         void directYield() noexcept;

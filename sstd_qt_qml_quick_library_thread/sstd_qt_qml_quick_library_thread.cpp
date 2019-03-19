@@ -87,9 +87,6 @@ namespace sstd {
         }
     }
 
-    void YieldToObjectThread::doRun() {
-    }
-
     ThreadObject::ThreadObject() {
     }
 
