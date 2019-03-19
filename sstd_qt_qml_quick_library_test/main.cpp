@@ -144,13 +144,13 @@ public:
 
 inline static void get_baidu() {
 
-    if constexpr(false){
+    if constexpr(true){
         auto var =
             sstd_make_start_function<GetBaidu>();
         var();
     }
 
-    if constexpr (false) {
+    if constexpr (true) {
         auto var =
             sstd_make_start_function<GetBaidu>();
     }
