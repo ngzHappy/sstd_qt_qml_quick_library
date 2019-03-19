@@ -69,7 +69,7 @@ class GetBaidu final : public sstd::YieldResumeFunction {
 protected:
     inline void doRun() override {
 
-        auto varManager= sstd_make_deletelater_virtual< QNetworkAccessManager >();
+        auto varManager= sstd_make_deletelater_virtual_unique< QNetworkAccessManager >();
 
         QNetworkRequest varBaidu{ QStringLiteral(R"(http://www.baidu.com)") };
 
