@@ -42,10 +42,11 @@ namespace sstd {
         /*如果target所在线程就是当前线程则继续执行，
         否则切换到target线程执行*/
         void yieldToObjectThread(QObject*target) noexcept;
+    protected:
+        void directRun() noexcept override;
     private:
-        void directResume() noexcept;
         void directYield() noexcept;
-        void directRun() noexcept;
+        void directResume() noexcept;
     private:
         sstd_class(YieldToObjectThread);
     };
