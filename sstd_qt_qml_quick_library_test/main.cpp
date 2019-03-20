@@ -65,6 +65,7 @@ inline static void test_run_in_thread() {
 
 }
 
+/*测试正常的yield resume*/
 class GetBaidu final : public sstd::YieldResumeFunction {
 protected:
     inline void doRun() override {
@@ -81,8 +82,7 @@ protected:
             varReply->deleteLater();
             varBaiduData = varReply->readAll();
         }));
-
-        sstd_function_yield();
+        sstd_function_inner_yield();
 
         if (varBaiduData) {
             qDebug() << QStringLiteral(R"(get baidu : )") << (*varBaiduData).size() ;
@@ -100,7 +100,7 @@ public:
 
 };
 
-
+/*测试在inner yield 内部抛出异常*/
 class GetBaiduTestException final : public sstd::YieldResumeFunction {
 protected:
     inline void doRun() override {
@@ -119,7 +119,7 @@ protected:
              
         }));
 
-        sstd_function_yield();
+        sstd_function_inner_yield();
 
         //throw 342342;
 
@@ -141,18 +141,21 @@ public:
 
 inline static void get_baidu() {
 
-    if constexpr(true){
+    if constexpr (true) {/*测试构造但不执行*/
+        static_assert(_theSSTDLibraryFunctionFile::HasQuit< GetBaidu >::value);
+        auto var =
+            sstd_make_start_function<GetBaidu>();
+    }
+
+    if constexpr(true){/*测试构造和执行*/
         auto var =
             sstd_make_start_function<GetBaidu>();
         var();
     }
 
-    if constexpr (true) {
-        auto var =
-            sstd_make_start_function<GetBaidu>();
-    }
+    
 
-    {
+    if constexpr (false) {
         auto var =
                 sstd_make_start_function<GetBaiduTestException>();
         auto var1 = var;
@@ -166,7 +169,7 @@ int main(int argc, char ** argv) {
 
     QApplication varApp{ argc , argv };
 
-    test_run_in_thread();
+    //test_run_in_thread();
     get_baidu();
 
     QWidget widget;
