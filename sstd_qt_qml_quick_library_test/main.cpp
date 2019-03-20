@@ -123,11 +123,7 @@ protected:
 
         //throw 342342;
 
-        if (varBaiduData) {
-            qDebug() << QStringLiteral(R"(get baidu : )") << (*varBaiduData).size() ;
-        } else {
-            qDebug() << QStringLiteral(R"(thre is some error when get http://www.baidu.com)");
-        }
+        assert(false&&"this shoule never be called!!!");
 
     }
 
@@ -137,6 +133,56 @@ public:
     }
 
 
+};
+
+/*测试在内部抛出异常*/
+class GetBaiduTestException1 final : public sstd::YieldResumeFunction {
+protected:
+    inline void doRun() override {
+
+        auto varManager = sstd_make_deletelater_virtual_unique< QNetworkAccessManager >();
+
+        QNetworkRequest varBaidu{ QStringLiteral(R"(http://www.baidu.com)") };
+
+        auto varReply = varManager->get(varBaidu);
+        std::optional< QByteArray > varBaiduData;
+
+        QObject::connect(varReply, &QNetworkReply::finished,
+            bindFunctionWithThis([varReply, this]() {
+            varReply->deleteLater();
+        }));
+
+        sstd_function_inner_yield();
+        throw 342342;
+
+        assert(false && "this shoule never be called!!!");
+
+    }
+
+public:
+    inline virtual ~GetBaiduTestException1() {
+        std::cout << __func__ << std::endl;
+    }
+
+
+};
+
+/*测试ouuter yield*/
+class OuterYiedTest final : public sstd::YieldResumeFunction {
+protected:
+    inline void doRun() override {
+
+        std::cout << "outer yied" << std::endl;
+
+        sstd_function_outer_yield();
+
+        std::cout << "continue" << std::endl;
+
+    }
+public:
+    inline virtual ~OuterYiedTest() {
+        std::cout << __func__ << std::endl;
+    }
 };
 
 inline static void get_baidu() {
@@ -153,14 +199,37 @@ inline static void get_baidu() {
         var();
     }
 
-    
-
-    if constexpr (false) {
+    if constexpr (true) {/*测试内部抛出异常*/
         auto var =
                 sstd_make_start_function<GetBaiduTestException>();
         auto var1 = var;
         var1();
     }
+
+    if constexpr (true) {/*测试内部抛出异常*/
+        auto var =
+            sstd_make_start_function<GetBaiduTestException1>();
+        auto var1 = var;
+        var1();
+    }
+
+    if constexpr (true) {/*outer yield*/
+        auto var =
+            sstd_make_start_function<OuterYiedTest>();
+        auto var1 = var;
+        var1.start();
+        var1.quit();
+    }
+
+    if constexpr (true) {/*outer yield*/
+        auto var =
+            sstd_make_start_function<OuterYiedTest>();
+        auto var1 = var;
+        var1.start();
+        var1.start();
+        var1.start();
+    }
+
 
 }
 
@@ -169,7 +238,7 @@ int main(int argc, char ** argv) {
 
     QApplication varApp{ argc , argv };
 
-    //test_run_in_thread();
+    test_run_in_thread();
     get_baidu();
 
     QWidget widget;
