@@ -174,6 +174,11 @@ protected:
 
         std::cout << "outer yied" << std::endl;
 
+        sstd_try{
+            throw 2222;
+        }sstd_catch(...) {
+        }
+
         outerYiled();
 
         std::cout << "continue" << std::endl;
