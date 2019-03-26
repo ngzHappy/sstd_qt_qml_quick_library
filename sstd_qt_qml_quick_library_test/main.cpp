@@ -70,7 +70,7 @@ class GetBaidu final : public sstd::YieldResumeFunction {
 protected:
     inline void doRun() override {
 
-        auto varManager= sstd_make_deletelater_virtual_unique< QNetworkAccessManager >();
+        auto varManager = sstd_make_deletelater_virtual_unique< QNetworkAccessManager >();
 
         QNetworkRequest varBaidu{ QStringLiteral(R"(http://www.baidu.com)") };
 
@@ -78,14 +78,14 @@ protected:
         std::optional< QByteArray > varBaiduData;
 
         QObject::connect(varReply, &QNetworkReply::finished,
-           bindFunctionWithThis( [varReply, &varBaiduData, this]() {
+            bind([varReply, &varBaiduData, this]() {
             varReply->deleteLater();
             varBaiduData = varReply->readAll();
         }));
-        sstd_function_inner_yield();
+        innerYield();
 
         if (varBaiduData) {
-            qDebug() << QStringLiteral(R"(get baidu : )") << (*varBaiduData).size() ;
+            qDebug() << QStringLiteral(R"(get baidu : )") << (*varBaiduData).size();
         } else {
             qDebug() << QStringLiteral(R"(thre is some error when get http://www.baidu.com)");
         }
@@ -93,8 +93,8 @@ protected:
     }
 
 public:
-    inline virtual ~GetBaidu(){
-        std::cout  << __func__ << std::endl;
+    inline virtual ~GetBaidu() {
+        std::cout << __func__ << std::endl;
     }
 
 
@@ -105,7 +105,7 @@ class GetBaiduTestException final : public sstd::YieldResumeFunction {
 protected:
     inline void doRun() override {
 
-        auto varManager= sstd_make_deletelater_virtual_unique< QNetworkAccessManager >();
+        auto varManager = sstd_make_deletelater_virtual_unique< QNetworkAccessManager >();
 
         QNetworkRequest varBaidu{ QStringLiteral(R"(http://www.baidu.com)") };
 
@@ -113,23 +113,23 @@ protected:
         std::optional< QByteArray > varBaiduData;
 
         QObject::connect(varReply, &QNetworkReply::finished,
-           bindFunctionWithThis( [varReply,this]() {
+            bind([varReply, this]() {
             varReply->deleteLater();
             throw 12345;
-             
+
         }));
 
-        sstd_function_inner_yield();
+        innerYield();
 
         //throw 342342;
 
-        assert(false&&"this shoule never be called!!!");
+        assert(false && "this shoule never be called!!!");
 
     }
 
 public:
-    inline virtual ~GetBaiduTestException(){
-        std::cout  << __func__ << std::endl;
+    inline virtual ~GetBaiduTestException() {
+        std::cout << __func__ << std::endl;
     }
 
 
@@ -148,11 +148,11 @@ protected:
         std::optional< QByteArray > varBaiduData;
 
         QObject::connect(varReply, &QNetworkReply::finished,
-            bindFunctionWithThis([varReply, this]() {
+            bind([varReply, this]() {
             varReply->deleteLater();
         }));
 
-        sstd_function_inner_yield();
+        innerYield();
         throw 342342;
 
         assert(false && "this shoule never be called!!!");
@@ -174,7 +174,7 @@ protected:
 
         std::cout << "outer yied" << std::endl;
 
-        sstd_function_outer_yield();
+        outerYiled();
 
         std::cout << "continue" << std::endl;
 
@@ -193,7 +193,7 @@ inline static void get_baidu() {
             sstd_make_start_function<GetBaidu>();
     }
 
-    if constexpr(true){/*测试构造和执行*/
+    if constexpr (true) {/*测试构造和执行*/
         auto var =
             sstd_make_start_function<GetBaidu>();
         var();
@@ -201,7 +201,7 @@ inline static void get_baidu() {
 
     if constexpr (true) {/*测试内部抛出异常*/
         auto var =
-                sstd_make_start_function<GetBaiduTestException>();
+            sstd_make_start_function<GetBaiduTestException>();
         auto var1 = var;
         var1();
     }
@@ -238,7 +238,7 @@ int main(int argc, char ** argv) {
 
     QApplication varApp{ argc , argv };
 
-    test_run_in_thread();
+   // test_run_in_thread();
     get_baidu();
 
     QWidget widget;
