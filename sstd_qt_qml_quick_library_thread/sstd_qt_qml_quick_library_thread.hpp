@@ -38,15 +38,15 @@ namespace sstd {
         virtual ~YieldToObjectThread();
         YieldToObjectThread(std::size_t = 1024uLL * 1024uLL * 64uLL);
     public:
-        void start() noexcept;
+        void start() ;
     protected:
         /*如果target所在线程就是当前线程则继续执行，
         否则切换到target线程执行*/
-        void yieldToObjectThread(QObject*target) noexcept;
+        void yieldToObjectThread(QObject*target) ;
     private:
-        void directRun() noexcept;
-        void directYield() noexcept;
-        void directResume() noexcept;
+        void directRun() ;
+        void directYield() ;
+        void directResume() ;
     private:
         using shared_super::shared_from_this;
         using shared_super::weak_from_this;

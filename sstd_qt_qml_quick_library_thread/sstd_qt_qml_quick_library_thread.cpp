@@ -5,6 +5,10 @@
 #include <sstd/boost/context/fiber.hpp>
 #include <sstd/boost/context/protected_fixedsize_stack.hpp>
 
+namespace sstd {
+    using SkipException = boost::context::detail::forced_unwind;
+}/*namespace sstd */
+
 namespace _theSSTDLibraryMemoryFile {
 
     using Mutex = sstd::ThreadObject::Mutex;
@@ -38,7 +42,7 @@ namespace sstd {
         });
     }
 
-    void YieldToObjectThread::start() noexcept {
+    void YieldToObjectThread::start() {
         directResume();
     }
 
@@ -47,20 +51,20 @@ namespace sstd {
     }
 
     /*在同一时刻只能有一个调用者,也只能有一个执行者*/
-    void YieldToObjectThread::directResume() noexcept {/*将执行权交给执行者*/
+    void YieldToObjectThread::directResume() {/*将执行权交给执行者*/
         std::unique_lock varLock{ thisPrivate->fiberMutex };
         assert(thisPrivate->fiber);
         assert(*(thisPrivate->fiber));
         (*(thisPrivate->fiber)) = std::move(*(thisPrivate->fiber)).resume();
     }
 
-    void YieldToObjectThread::directYield() noexcept {/*将执行权交给调用者*/
+    void YieldToObjectThread::directYield() {/*将执行权交给调用者*/
         assert(thisPrivate->functionFiber);
         assert(*(thisPrivate->functionFiber));
         (*(thisPrivate->functionFiber)) = std::move(*(thisPrivate->functionFiber)).resume();
     }
 
-    void YieldToObjectThread::yieldToObjectThread(QObject * arg) noexcept {
+    void YieldToObjectThread::yieldToObjectThread(QObject * arg) {
 
         assert(arg);
         assert(this->shared_from_this());
@@ -79,10 +83,12 @@ namespace sstd {
 
     }
 
-    void YieldToObjectThread::directRun() noexcept {
+    void YieldToObjectThread::directRun() {
         sstd_try{
             this->doRun();
-        }sstd_catch(...) {
+        }sstd_catch(const SkipException &) {
+            throw;
+        } sstd_catch(...) {
             this->doException();
         }
     }
