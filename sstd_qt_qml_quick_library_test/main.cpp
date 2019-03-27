@@ -168,11 +168,11 @@ public:
 };
 
 /*测试ouuter yield*/
-class OuterYiedTest final : public sstd::YieldResumeFunction {
+class OuterYieldTest final : public sstd::YieldResumeFunction {
 protected:
     inline void doRun() override {
 
-        std::cout << "outer yied" << std::endl;
+        std::cout << "outer yield" << std::endl;
 
         sstd_try{
             throw 2222;
@@ -185,7 +185,7 @@ protected:
 
     }
 public:
-    inline virtual ~OuterYiedTest() {
+    inline virtual ~OuterYieldTest() {
         std::cout << __func__ << std::endl;
     }
 };
@@ -220,7 +220,7 @@ inline static void get_baidu() {
 
     if constexpr (true) {/*outer yield*/
         auto var =
-            sstd_make_start_function<OuterYiedTest>();
+            sstd_make_start_function<OuterYieldTest>();
         auto var1 = var;
         var1.start();
         var1.quit();
@@ -228,7 +228,7 @@ inline static void get_baidu() {
 
     if constexpr (true) {/*outer yield*/
         auto var =
-            sstd_make_start_function<OuterYiedTest>();
+            sstd_make_start_function<OuterYieldTest>();
         auto var1 = var;
         var1.start();
         var1.start();
