@@ -243,7 +243,7 @@ int main(int argc, char ** argv) {
 
     QApplication varApp{ argc , argv };
 
-   // test_run_in_thread();
+    test_run_in_thread();
     get_baidu();
 
     QWidget widget;
