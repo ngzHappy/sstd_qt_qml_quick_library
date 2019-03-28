@@ -266,8 +266,12 @@ namespace sstd {
 namespace _theSSTDLibraryMemoryFile {
 
     inline uint threadObjectID() {
-        static const uint varAns =
-            QObject::registerUserData();
+        static const uint varAns = []() ->uint{
+            auto varAns =
+                sstd::QObjectOwnQThread::getID();
+            varAns= QObject::registerUserData();
+            return varAns;
+        }();
         return varAns;
     }
 
