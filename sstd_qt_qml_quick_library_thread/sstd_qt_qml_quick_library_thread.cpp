@@ -188,12 +188,12 @@ namespace sstd {
                     return;
                 }
                 thisData.erase(varPos);
-                unlock_later(arg);
+                unlock(arg);
             }
 
             inline ~QObjectOwnQThread(){
                 for( auto varI : thisData ){
-                    unlock_later(varI);
+                    unlock(varI);
                 }
             }
 
