@@ -251,6 +251,16 @@ namespace sstd {
 
     }
 
+    QSSTDThread::QSSTDThread() {
+        assert(qApp);
+        this->moveToThread(qApp->thread());
+        {
+            auto var = getThreadObject(this);
+            (void)var;
+        }
+        connect(this, &QThread::finished, this, &QObject::deleteLater, Qt::DirectConnection);
+    }
+
 }/*namespace sstd*/
 
 namespace _theSSTDLibraryMemoryFile {

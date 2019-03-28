@@ -10,6 +10,14 @@ namespace _theSSTDQtQmlQuickLibraryThreadFile {
 
 namespace sstd {
 
+    class SSTD_QT_SYMBOL_DECL QSSTDThread : public QThread {
+        Q_OBJECT
+    public:
+        QSSTDThread();
+    private:
+        sstd_class(QSSTDThread);
+    };
+
     class SSTD_QT_SYMBOL_DECL ThreadObject :
         public QObject,
         public QObjectUserData {
@@ -38,15 +46,15 @@ namespace sstd {
         virtual ~YieldToObjectThread();
         YieldToObjectThread(std::size_t = 1024uLL * 1024uLL * 64uLL);
     public:
-        void start() ;
+        void start();
     protected:
         /*如果target所在线程就是当前线程则继续执行，
         否则切换到target线程执行*/
-        void yieldToObjectThread(QObject*target) ;
+        void yieldToObjectThread(QObject*target);
     private:
-        void directRun() ;
-        void directYield() ;
-        void directResume() ;
+        void directRun();
+        void directYield();
+        void directResume();
     private:
         using shared_super::shared_from_this;
         using shared_super::weak_from_this;
@@ -57,12 +65,12 @@ namespace sstd {
     SSTD_QT_SYMBOL_DECL void lock(QThread *);
     SSTD_QT_SYMBOL_DECL void unlock(QThread *);
     SSTD_QT_SYMBOL_DECL void unlock_later(QThread *);
-    SSTD_QT_SYMBOL_DECL void qobjectOwnQThread(QObject*,QThread *,bool=true);
+    SSTD_QT_SYMBOL_DECL void qobjectOwnQThread(QObject*, QThread *, bool = true);
 
-    class QThreadLocker{
-        QThread * thisData{nullptr};
+    class QThreadLocker {
+        QThread * thisData{ nullptr };
     public:
-        inline QThreadLocker() = default ;
+        inline QThreadLocker() = default;
         inline QThreadLocker(QThread *);
         inline ~QThreadLocker();
         inline QThreadLocker(QThreadLocker &&);
@@ -71,17 +79,17 @@ namespace sstd {
         inline void lock();
         inline void unlock();
     public:
-        QThreadLocker(const QThreadLocker &)=delete;
-        QThreadLocker&operator=(const QThreadLocker &)=delete;
+        QThreadLocker(const QThreadLocker &) = delete;
+        QThreadLocker&operator=(const QThreadLocker &) = delete;
     public:
         sstd_class(QThreadLocker);
     };
 
-    inline QThreadLocker::QThreadLocker(QThread * arg) : thisData{arg} {
+    inline QThreadLocker::QThreadLocker(QThread * arg) : thisData{ arg } {
         this->lock();
     }
 
-    inline QThreadLocker::~QThreadLocker(){
+    inline QThreadLocker::~QThreadLocker() {
         this->unlock();
     }
 
@@ -89,25 +97,25 @@ namespace sstd {
         arg.thisData = nullptr;
     }
 
-    inline QThreadLocker&QThreadLocker::operator=(QThreadLocker&& arg){
-        if(this==&arg){
+    inline QThreadLocker&QThreadLocker::operator=(QThreadLocker&& arg) {
+        if (this == &arg) {
             return *this;
         }
         this->unlock();
-        this->thisData=arg.thisData;
+        this->thisData = arg.thisData;
         arg.thisData = nullptr;
         return *this;
     }
 
-    inline void QThreadLocker::lock(){
-        if( thisData ){
-            sstd::lock( thisData );
+    inline void QThreadLocker::lock() {
+        if (thisData) {
+            sstd::lock(thisData);
         }
     }
 
-    inline void QThreadLocker::unlock(){
-        if( thisData ){
-            sstd::unlock( thisData );
+    inline void QThreadLocker::unlock() {
+        if (thisData) {
+            sstd::unlock(thisData);
         }
     }
 
