@@ -214,11 +214,13 @@ namespace sstd {
         private:
             sstd_class(QObjectOwnQThread);
         };
+
         inline uint QObjectOwnQThread::getID() {
             static const uint varAns =
                 QObject::registerUserData();
             return varAns;
         }
+
     }
 
     SSTD_QT_SYMBOL_DECL void qobjectOwnQThread(QObject * argO, QThread * argT, bool argAdd) {
