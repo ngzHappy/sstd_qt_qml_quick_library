@@ -3,6 +3,7 @@
 #include <private/qobject_p.h>
 #include <private/qthread_p.h>
 
+#include <set>
 #include <mutex>
 #include <shared_mutex>
 
@@ -149,7 +150,6 @@ namespace sstd {
 
     }
 
-
     SSTD_QT_SYMBOL_DECL void lock(QThread * arg){
         auto var =
                 static_cast<QThreadPrivate *>( QObjectPrivate::get(arg) );
@@ -160,6 +160,81 @@ namespace sstd {
         auto var =
                 static_cast<QThreadPrivate *>( QObjectPrivate::get(arg) );
         var->deref();
+    }
+
+    SSTD_QT_SYMBOL_DECL void unlock_later(QThread * arg){
+        auto var = getThreadObject(arg);
+        QMetaObject::invokeMethod( var ,[arg](){ sstd::unlock(arg); } , Qt::QueuedConnection );
+    }
+
+    namespace  {
+        class QObjectOwnQThread : public QObjectUserData {
+            std::set< QThread * , std::less<> , sstd::allocator< QThread * > > thisData;
+        public:
+            static inline uint getID();
+        public:
+
+            inline void insert( QThread * arg ){
+                if( thisData.count( arg ) > 0 ) {
+                    return;
+                }
+                thisData.insert( arg );
+                sstd::lock( arg );
+            }
+
+            inline void remove( QThread * arg ){
+                auto varPos = thisData.find( arg );
+                if( varPos == thisData.end() ){
+                    return;
+                }
+                thisData.erase(varPos);
+                unlock_later(arg);
+            }
+
+            inline ~QObjectOwnQThread(){
+                for( auto varI : thisData ){
+                    unlock_later(varI);
+                }
+            }
+
+            inline QObjectOwnQThread() = default;
+
+        private:
+            sstd_class(QObjectOwnQThread);
+        };
+        inline uint QObjectOwnQThread::getID(){
+            static const uint varAns =
+                QObject::registerUserData();
+            return varAns;
+        }
+    }
+
+    SSTD_QT_SYMBOL_DECL void qobjectOwnQThread(QObject * argO,QThread * argT,bool argAdd){
+
+        if( argO == nullptr ){
+            return;
+        }
+
+        if( argT == nullptr ){
+            return;
+        }
+
+        assert( dynamic_cast<QThread *>(argO) == nullptr );
+
+        auto varUserData =
+            argO->userData( QObjectOwnQThread::getID() );
+
+        if( varUserData == nullptr ){
+            varUserData = sstd_new<QObjectOwnQThread>();
+            argO->setUserData(QObjectOwnQThread::getID() ,varUserData);
+        }
+
+        if( argAdd ){
+            static_cast<QObjectOwnQThread*>( varUserData)->insert(argT);
+        }else{
+            static_cast<QObjectOwnQThread*>( varUserData)->remove(argT);
+        }
+
     }
 
 }/*namespace sstd*/

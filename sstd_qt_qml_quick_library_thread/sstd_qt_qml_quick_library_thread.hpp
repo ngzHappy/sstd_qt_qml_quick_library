@@ -56,6 +56,8 @@ namespace sstd {
 
     SSTD_QT_SYMBOL_DECL void lock(QThread *);
     SSTD_QT_SYMBOL_DECL void unlock(QThread *);
+    SSTD_QT_SYMBOL_DECL void unlock_later(QThread *);
+    SSTD_QT_SYMBOL_DECL void qobjectOwnQThread(QObject*,QThread *,bool=true);
 
     class QThreadLocker{
         QThread * thisData{nullptr};
