@@ -1,6 +1,9 @@
 
 TEMPLATE = lib
 
+QT += gui_private
+QT += core_private
+
 DEFINES *= SSTD_QT_BUILD_SOURCE
 
 CONFIG(debug,debug|release){

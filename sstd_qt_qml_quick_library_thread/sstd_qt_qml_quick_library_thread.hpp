@@ -54,6 +54,60 @@ namespace sstd {
         sstd_class(YieldToObjectThread);
     };
 
+    SSTD_QT_SYMBOL_DECL void lock(QThread *);
+    SSTD_QT_SYMBOL_DECL void unlock(QThread *);
+
+    class QThreadLocker{
+        QThread * thisData{nullptr};
+    public:
+        inline QThreadLocker() = default ;
+        inline QThreadLocker(QThread *);
+        inline ~QThreadLocker();
+        inline QThreadLocker(QThreadLocker &&);
+        inline QThreadLocker&operator=(QThreadLocker&&);
+    private:
+        inline void lock();
+        inline void unlock();
+    public:
+        QThreadLocker(const QThreadLocker &)=delete;
+        QThreadLocker&operator=(const QThreadLocker &)=delete;
+    public:
+        sstd_class(QThreadLocker);
+    };
+
+    inline QThreadLocker::QThreadLocker(QThread * arg) : thisData{arg} {
+        this->lock();
+    }
+
+    inline QThreadLocker::~QThreadLocker(){
+        this->unlock();
+    }
+
+    inline QThreadLocker::QThreadLocker(QThreadLocker && arg) : thisData(arg.thisData) {
+        arg.thisData = nullptr;
+    }
+
+    inline QThreadLocker&QThreadLocker::operator=(QThreadLocker&& arg){
+        if(this==&arg){
+            return *this;
+        }
+        this->unlock();
+        this->thisData=arg.thisData;
+        arg.thisData = nullptr;
+        return *this;
+    }
+
+    inline void QThreadLocker::lock(){
+        if( thisData ){
+            sstd::lock( thisData );
+        }
+    }
+
+    inline void QThreadLocker::unlock(){
+        if( thisData ){
+            sstd::unlock( thisData );
+        }
+    }
 
 }/*namespace sstd*/
 

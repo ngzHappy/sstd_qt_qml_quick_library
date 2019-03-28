@@ -1,4 +1,8 @@
 ﻿#include "sstd_qt_qml_quick_library_thread.hpp"
+
+#include <private/qobject_p.h>
+#include <private/qthread_p.h>
+
 #include <mutex>
 #include <shared_mutex>
 
@@ -143,6 +147,19 @@ namespace sstd {
 
         return varAnsObject;
 
+    }
+
+
+    SSTD_QT_SYMBOL_DECL void lock(QThread * arg){
+        auto var =
+                static_cast<QThreadPrivate *>( QObjectPrivate::get(arg) );
+        var->ref();
+    }
+
+    SSTD_QT_SYMBOL_DECL void unlock(QThread * arg){
+        auto var =
+                static_cast<QThreadPrivate *>( QObjectPrivate::get(arg) );
+        var->deref();
     }
 
 }/*namespace sstd*/

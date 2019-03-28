@@ -17,3 +17,5 @@ DESTDIR = $${SSTD_LIBRARY_OUTPUT_PATH}
 SOURCES += $$PWD/main.cpp
 
 
+
+
