@@ -171,6 +171,10 @@ namespace sstd {
     }
 
     SSTD_QT_SYMBOL_DECL void unlock_later(QThread * arg) {
+        assert(qApp);
+        if (arg == qApp->thread()) {
+            return;
+        }
         auto var = getThreadObject(arg);
         QMetaObject::invokeMethod(var, [arg]() { sstd::unlock(arg); }, Qt::QueuedConnection);
     }
