@@ -15,7 +15,7 @@ namespace _theSSTDQtQmlQuickLibraryFile {
 #include "global_sstd_qt_qml_quick_library.hpp"
 #include "sstd_qt_qml_quick_library_thread/sstd_qt_qml_quick_library_thread.hpp"
 #include "sstd_qt_qml_quick_library_gzip/sstd_qt_qml_quick_library_gzip.hpp"
-
+#include "sstd_qt_qml_quick_library_application/sstd_qt_qml_quick_library_application.hpp"
 
 
 

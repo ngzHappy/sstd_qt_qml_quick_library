@@ -26,6 +26,9 @@ HEADERS += $$PWD/sstd_qt_qml_quick_library_thread/sstd_qt_qml_quick_library_thre
 SOURCES += $$PWD/sstd_qt_qml_quick_library_gzip/sstd_qt_qml_quick_library_gzip.cpp
 HEADERS += $$PWD/sstd_qt_qml_quick_library_gzip/sstd_qt_qml_quick_library_gzip.hpp
 
+SOURCES += $$PWD/sstd_qt_qml_quick_library_application/sstd_qt_qml_quick_library_application.cpp
+HEADERS += $$PWD/sstd_qt_qml_quick_library_application/sstd_qt_qml_quick_library_application.hpp
+
 #remove some build warning
 win32-msvc*{
     QMAKE_CXXFLAGS += /wd"4251"
