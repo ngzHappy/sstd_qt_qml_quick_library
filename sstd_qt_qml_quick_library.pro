@@ -29,6 +29,27 @@ HEADERS += $$PWD/sstd_qt_qml_quick_library_gzip/sstd_qt_qml_quick_library_gzip.h
 SOURCES += $$PWD/sstd_qt_qml_quick_library_application/sstd_qt_qml_quick_library_application.cpp
 HEADERS += $$PWD/sstd_qt_qml_quick_library_application/sstd_qt_qml_quick_library_application.hpp
 
+SOURCES += $$PWD/sstd_qt_qml_quick_library_opengl_default_format/sstd_qt_qml_quick_library_opengl_default_format.cpp
+HEADERS += $$PWD/sstd_qt_qml_quick_library_opengl_default_format/sstd_qt_qml_quick_library_opengl_default_format.hpp
+
+###################################################################################
+#glew
+INCLUDEPATH += $$PWD/sstd_qt_qml_quick_library_glew
+SOURCES += $$PWD/sstd_qt_qml_quick_library_glew/glew.c
+SOURCES += $$PWD/sstd_qt_qml_quick_library_glew/sstd_glew.cpp
+SOURCES += $$PWD/sstd_qt_qml_quick_library_glew/sstd_glew_initialization.cpp
+SOURCES += $$PWD/sstd_qt_qml_quick_library_glew/sstd_glew_utility.cpp
+DEFINES *= GLEW_NO_GLU
+DEFINES *= GLEW_STATIC
+win32:{
+    LIBS+= -lopengl32 -lgdi32 -luser32 -lkernel32
+} else {
+###libglu1-mesa-dev
+###libgl1-mesa-dev
+    LIBS+=-lXmu -lXi -lGL -lXext -lX11
+}
+###################################################################################
+
 #remove some build warning
 win32-msvc*{
     QMAKE_CXXFLAGS += /wd"4251"
