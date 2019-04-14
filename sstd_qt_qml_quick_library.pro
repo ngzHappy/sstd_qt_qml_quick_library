@@ -50,6 +50,8 @@ win32:{
 }
 ###################################################################################
 
+RESOURCES += $$PWD/resource/sstd_qt_and_qml_library.qrc
+
 #remove some build warning
 win32-msvc*{
     QMAKE_CXXFLAGS += /wd"4251"
