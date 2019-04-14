@@ -1,4 +1,6 @@
 ﻿#include "sstd_qt_qml_quick_library_application.hpp"
+#include "../sstd_qt_qml_quick_library_glew/sstd_glew_initialization.hpp"
+#include <QtCore/QtCore>
 #include <exception>
 
 #define \uacf1_call_if(\uaca1,\uaca2) if constexpr( \uaca1 ){  \uaca2 ; } static_assert(true)
@@ -32,10 +34,49 @@ namespace sstd {
         \uacf1_call_if(!isRelease(), ::qputenv("QSG_RENDER_LOOP", "basic"));
     }
 
+    namespace {
+        class OpenGLConstruct {
+        public:
+            QOffscreenSurface surface;
+            QOpenGLContext contex;
+            inline OpenGLConstruct() {
+                surface.setFormat(sstd::getDefaultQSurfaceFormat());
+                surface.create();
+                contex.setFormat(sstd::getDefaultQSurfaceFormat());
+                contex.create();
+                contex.makeCurrent(&surface);
+                if (false == sstd::glew_initialize()) {
+                    qFatal("can not init glew!!!");
+                }
+            }
+        private:
+            sstd_class(OpenGLConstruct);
+        };
+    }
+
     /*this function will call after QtApplication construct*/
     BeforeAfterQtApplication::~BeforeAfterQtApplication() {
         if (std::uncaught_exceptions() > 0) {
             return;
+        }
+        {
+            static auto varOpenGLContex = sstd_new<OpenGLConstruct>();
+            (void)varOpenGLContex;
+        }
+        {
+            /*强制加载QImage插件
+            防止第一次加载速度过慢*/
+            QImage varImage{ QStringLiteral(":/qtandqmlglobal/image/foreceLoadQImage.png") };
+            (void)varImage;
+        }
+        if constexpr (!isRelease()) {
+            /*设置Application Name*/
+            auto varName = qApp->applicationName();
+            const auto varAboutToRemove = QStringLiteral("_debug");
+            if (varName.endsWith(varAboutToRemove)) {
+                varName.chop(varAboutToRemove.size());
+                qApp->setApplicationName(varName);
+            }
         }
     }
 

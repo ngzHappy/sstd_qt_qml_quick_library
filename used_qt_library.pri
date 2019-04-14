@@ -9,7 +9,7 @@ QT += concurrent
 QT += quickwidgets
 QT += quickcontrols2
 
-
+DEFINES *= SSTD_HAS_GLEW_APPLICATION_INITIALIZE
 
 
 
