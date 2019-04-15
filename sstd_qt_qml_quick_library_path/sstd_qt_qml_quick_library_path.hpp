@@ -2,6 +2,7 @@
 
 #include "../global_sstd_qt_qml_quick_library.hpp"
 #include <QtCore/qurl.h>
+#include <QtCore/qdir.h>
 #include <QtCore/qcoreapplication.h>
 
 namespace sstd {
