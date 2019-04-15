@@ -15,7 +15,3 @@ include($$PWD/../sstd_qt_qml_quick_library.pri)
 DESTDIR = $${SSTD_LIBRARY_OUTPUT_PATH}
 
 SOURCES += $$PWD/main.cpp
-
-
-
-

@@ -9,6 +9,3 @@ namespace sstd {
     SSTD_QT_SYMBOL_DECL const QSurfaceFormat & getDefaultQSurfaceFormat();
 
 }/*namespace sstd*/
-
-
-

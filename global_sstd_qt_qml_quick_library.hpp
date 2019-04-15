@@ -28,4 +28,3 @@ inline std::unique_ptr< T , sstd::DeleteLater > sstd_make_deletelater_virtual_un
     return std::unique_ptr< T , sstd::DeleteLater >{
         sstd_virtual_new<T>(std::forward<Args>(args)...) };
 }
-

@@ -9,8 +9,3 @@ CONFIG(debug,debug|release){
 }else{
     LIBS += -L$${SSTD_LIBRARY_OUTPUT_PATH} -lsstd_qt_qml_quick_library
 }
-
-
-
-
-
