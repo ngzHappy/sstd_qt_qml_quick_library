@@ -18,7 +18,7 @@ namespace _theSSTDQtQmlQuickLibraryFile {
 #include "sstd_qt_qml_quick_library_application/sstd_qt_qml_quick_library_application.hpp"
 #include "sstd_qt_qml_quick_library_opengl_default_format/sstd_qt_qml_quick_library_opengl_default_format.hpp"
 #include "sstd_qt_qml_quick_library_glew/sstd_glew.hpp"
-
+#include "sstd_qt_qml_quick_library_path/sstd_qt_qml_quick_library_path.hpp"
 
 
 

@@ -32,6 +32,9 @@ HEADERS += $$PWD/sstd_qt_qml_quick_library_application/sstd_qt_qml_quick_library
 SOURCES += $$PWD/sstd_qt_qml_quick_library_opengl_default_format/sstd_qt_qml_quick_library_opengl_default_format.cpp
 HEADERS += $$PWD/sstd_qt_qml_quick_library_opengl_default_format/sstd_qt_qml_quick_library_opengl_default_format.hpp
 
+SOURCES += $$PWD/sstd_qt_qml_quick_library_path/sstd_qt_qml_quick_library_path.cpp
+HEADERS += $$PWD/sstd_qt_qml_quick_library_path/sstd_qt_qml_quick_library_path.hpp
+
 ###################################################################################
 #glew
 INCLUDEPATH += $$PWD/sstd_qt_qml_quick_library_glew
