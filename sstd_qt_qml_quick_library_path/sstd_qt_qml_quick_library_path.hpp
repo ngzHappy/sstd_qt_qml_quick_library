@@ -36,4 +36,22 @@ namespace sstd {
         }
     }
 
+    template<typename T>
+    inline std::remove_reference_t<T> autoTheQMlPath(const QString & arg) {
+        using U = std::remove_cv_t< std::remove_reference_t<T> >;
+        const static QString varDir = []()->QString {
+            QDir varDir{ qApp->applicationDirPath() };
+#if defined(_DEBUG)
+            return varDir.absoluteFilePath(QStringLiteral("theqml_the_debug"));
+#else
+            return varDir.absoluteFilePath(QStringLiteral("theqml"));
+#endif
+        }();
+        if constexpr (std::is_same_v<U, QString>) {
+            return getLocalFileFullFilePath(arg, varDir);
+        } else if constexpr (std::is_same_v<U, QUrl>) {
+            return getLocalFileFullPath(arg, varDir);
+        }
+    }
+
 }/*namespace sstd*/
