@@ -26,5 +26,14 @@ namespace sstd {
 
     SSTD_QT_SYMBOL_DECL QString getLocalPathFromApp(const QString &);
 
+    template<typename T>
+    inline std::remove_reference_t<T> autoLocalPath(const QString & arg) {
+        using U = std::remove_cv_t< std::remove_reference_t<T> >;
+        if constexpr (std::is_same_v<U, QString>) {
+            return getLocalFileFullFilePath(arg);
+        } else if constexpr (std::is_same_v<U, QUrl>) {
+            return getLocalFileFullPath(arg);
+        }
+    }
 
 }/*namespace sstd*/
