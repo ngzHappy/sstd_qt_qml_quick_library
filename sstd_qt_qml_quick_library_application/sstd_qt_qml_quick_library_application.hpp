@@ -6,7 +6,7 @@ namespace sstd {
 
     class SSTD_QT_SYMBOL_DECL BeforeAfterQtApplication {
     public:
-        BeforeAfterQtApplication();
+        BeforeAfterQtApplication(QString={});
         ~BeforeAfterQtApplication();
     public:
         sstd_delete_copy_create(BeforeAfterQtApplication);
@@ -21,7 +21,7 @@ namespace sstd {
         public sstd::Application {
         Q_OBJECT
     public:
-        QtApplication(int &, char **, BeforeAfterQtApplication&& = {});
+        QtApplication(int &, char **,BeforeAfterQtApplication&& = {});
     private:
         sstd_class(QtApplication);
     };

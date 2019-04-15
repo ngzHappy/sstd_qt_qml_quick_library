@@ -21,7 +21,7 @@ namespace sstd {
     }
 
     /*this function will call before QtApplication construct*/
-    BeforeAfterQtApplication::BeforeAfterQtApplication() {
+    BeforeAfterQtApplication::BeforeAfterQtApplication(QString argStyle) {
         /*初始化随机种子*/
         \uacf1_call_if(true, ::srand(static_cast<unsigned>(::time(nullptr))));
         /*支持高分屏*/
@@ -31,7 +31,12 @@ namespace sstd {
         /*开启OpenGL共享资源*/
         \uacf1_call_if(true, QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts));
         /*debug模式关闭异步渲染,release模式开启异步渲染*/
-        \uacf1_call_if(!isRelease(), ::qputenv("QSG_RENDER_LOOP", "basic"));
+        \uacf1_call_if(!isRelease(), ::qputenv("QSG_RENDER_LOOP", QByteArrayLiteral("basic")));
+        /*设置样式*/
+        if(!argStyle.isEmpty()){
+            const auto varStypeFileName = argStyle.toLocal8Bit();
+            ::qputenv("QT_QUICK_CONTROLS_CONF",varStypeFileName );
+        }
     }
 
     namespace {
