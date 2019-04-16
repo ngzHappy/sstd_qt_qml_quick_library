@@ -4,6 +4,7 @@
 #include <QtCore/qurl.h>
 #include <QtCore/qdir.h>
 #include <QtCore/qcoreapplication.h>
+#include <QtCore/qregularexpression.h>
 
 namespace sstd {
 
@@ -48,10 +49,14 @@ namespace sstd {
             return varDir.absoluteFilePath(QStringLiteral("theqml"));
 #endif
         }();
+        QString varStr = arg;
+        const static auto varReg = QRegularExpression(QStringLiteral("_the_debug"),
+                                                 QRegularExpression::CaseInsensitiveOption);
+        varStr.replace( varReg,QStringLiteral("") );
         if constexpr (std::is_same_v<U, QString>) {
-            return getLocalFileFullFilePath(arg, varDir);
+            return getLocalFileFullFilePath(varStr, varDir);
         } else if constexpr (std::is_same_v<U, QUrl>) {
-            return getLocalFileFullPath(arg, varDir);
+            return getLocalFileFullPath(varStr, varDir);
         }
     }
 
