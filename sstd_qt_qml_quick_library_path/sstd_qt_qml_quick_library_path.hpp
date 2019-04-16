@@ -28,6 +28,19 @@ namespace sstd {
 
     SSTD_QT_SYMBOL_DECL QString getLocalPathFromApp(const QString &);
 
+    /*qApp未初始化时使用*/
+    inline QString replaceFileName(const char * argV, const QString & arg) {
+#if defined(_DEBUG) && defined(CURRENT_DEBUG_PATH)
+        sstd::filesystem::path varPath{ CURRENT_DEBUG_PATH };
+        varPath /= arg.toStdWString();
+        (void)argV;
+#else
+        sstd::filesystem::path varPath{ argV };
+        varPath = varPath.parent_path() / arg.toStdWString();
+#endif
+        return QString::fromStdWString(varPath.wstring());
+    }
+
     template<typename T>
     inline std::remove_reference_t<T> autoLocalPath(const QString & arg) {
         using U = std::remove_cv_t< std::remove_reference_t<T> >;
@@ -51,8 +64,8 @@ namespace sstd {
         }();
         QString varStr = arg;
         const static auto varReg = QRegularExpression(QStringLiteral("_the_debug"),
-                                                 QRegularExpression::CaseInsensitiveOption);
-        varStr.replace( varReg,QStringLiteral("") );
+            QRegularExpression::CaseInsensitiveOption);
+        varStr.replace(varReg, QStringLiteral(""));
         if constexpr (std::is_same_v<U, QString>) {
             return getLocalFileFullFilePath(varStr, varDir);
         } else if constexpr (std::is_same_v<U, QUrl>) {
