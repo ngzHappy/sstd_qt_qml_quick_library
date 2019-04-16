@@ -15,7 +15,6 @@ namespace sstd {
             auto varFormat = QSurfaceFormat::defaultFormat();
             varFormat.setVersion(4, 6);
             varFormat.setProfile(QSurfaceFormat::CoreProfile);
-            varFormat.setSamples(4);
             varFormat.setAlphaBufferSize(8);
             varFormat.setBlueBufferSize(8);
             varFormat.setRedBufferSize(8);
