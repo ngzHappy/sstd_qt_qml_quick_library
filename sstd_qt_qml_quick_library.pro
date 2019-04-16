@@ -49,6 +49,8 @@ win32:{
 } else {
 ###libglu1-mesa-dev
 ###libgl1-mesa-dev
+###libxi-dev
+###libxmu-dev
     LIBS+=-lXmu -lXi -lGL -lXext -lX11
 }
 ###################################################################################
