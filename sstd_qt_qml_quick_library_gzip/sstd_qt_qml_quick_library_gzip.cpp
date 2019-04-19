@@ -9,7 +9,6 @@
 #define GZIP_WINDOWS_BIT  (15 + 16)
 #define GZIP_CHUNK_SIZE   (32 * 1024)
 
-
 namespace _gzip {
 
     namespace {
@@ -223,7 +222,6 @@ namespace sstd {
     bool  GZipCompressor::gzipCompress(const char *varInputData,
         int varInputLength,
         QByteArray &output, int level) {
-        output.clear();
         return _gzip::QCompressor_gzipCompress(varInputData,
             varInputData+varInputLength,
             output,
@@ -233,7 +231,6 @@ namespace sstd {
     bool GZipCompressor::gzipDecompress(const char * varInputData,
         int varInputLength,
         QByteArray &output) {
-        output.clear();
         return _gzip::QCompressor_gzipDecompress(varInputData,
             varInputData+varInputLength,
             output);
