@@ -41,6 +41,8 @@ namespace sstd {
             int varMultiSamleValue{ -1 };
             varStream >> varMultiSamleValue;
             defaultMultiSampleSize() = varMultiSamleValue;
+            assert(varMultiSamleValue<256);
+            assert(varMultiSamleValue>-256);
         } while (false);
         /*初始化随机种子*/
         \uacf1_call_if(true, ::srand(static_cast<unsigned>(::time(nullptr))));
