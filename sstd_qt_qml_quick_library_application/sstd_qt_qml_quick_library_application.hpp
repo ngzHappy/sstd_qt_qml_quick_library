@@ -28,7 +28,7 @@ namespace sstd {
         sstd_class(_QtApplication);
     };
 
-    class QtApplication {
+    class SSTD_QT_SYMBOL_DECL QtApplication {
         std::shared_ptr< _QtApplication > thisData;
     public:
         QtApplication(int &,char **, BeforeAfterQtApplication&& = {});
