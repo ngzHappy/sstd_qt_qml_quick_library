@@ -32,6 +32,8 @@ namespace sstd {
         \uacf1_call_if(true, QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts));
         /*debug模式关闭异步渲染,release模式开启异步渲染*/
         \uacf1_call_if(!isRelease(), ::qputenv("QSG_RENDER_LOOP", QByteArrayLiteral("basic")));
+        /*debug模式开始import调试输出*/
+        \uacf1_call_if(!isRelease(), ::qputenv("QML_IMPORT_TRACE", QByteArrayLiteral("1")));
         /*设置样式*/
         if(!argStyle.isEmpty()){
             const auto varStypeFileName = argStyle.toLocal8Bit();
