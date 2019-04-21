@@ -39,12 +39,26 @@ namespace sstd {
         }
     }
 
+    extern int & defaultMultiSampleSize();
     namespace {
         class OpenGLConstruct {
         public:
             QOffscreenSurface surface;
             QOpenGLContext contex;
             inline OpenGLConstruct() {
+                do{/*读取配置文件，尝试更改multisample值*/
+                    QDir varAppDir{ qApp->applicationDirPath() };
+                    auto varFileName = varAppDir.absoluteFilePath( QStringLiteral("sstd_app_contex/multisample.txt") );
+                    QFile varFile{ varFileName };
+                    if( false == varFile.open(QIODevice::ReadOnly) ){
+                        qWarning() << QStringLiteral("can not find : sstd_app_contex/multisample.txt");
+                        break;
+                    }
+                    QTextStream varStream{ &varFile };
+                    int varMultiSamleValue{ -1 };
+                    varStream >> varMultiSamleValue;
+                    defaultMultiSampleSize() = varMultiSamleValue;
+                }while(false);
                 surface.setFormat(sstd::getDefaultQSurfaceFormat());
                 surface.create();
                 contex.setFormat(sstd::getDefaultQSurfaceFormat());

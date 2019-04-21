@@ -10,6 +10,11 @@
 
 namespace sstd {
 
+    extern int & defaultMultiSampleSize(){
+        static int varAns{ 4 };
+        return varAns;
+    }
+
     namespace {
         inline QSurfaceFormat _0_GetDefaultQSurfaceFormat() {
             auto varFormat = QSurfaceFormat::defaultFormat();
@@ -23,6 +28,7 @@ namespace sstd {
             varFormat.setSwapBehavior(QSurfaceFormat::DoubleBuffer);
             varFormat.setRenderableType(QSurfaceFormat::OpenGL);
             varFormat.setSwapInterval(0)/*关闭垂直同步*/;
+            varFormat.setSamples(defaultMultiSampleSize());
 #if defined(ENABLE_GL_DEBUG)
             varFormat.setOption(QSurfaceFormat::DebugContext, true);
 #else

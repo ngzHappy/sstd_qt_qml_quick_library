@@ -64,3 +64,9 @@ win32-msvc*{
     QMAKE_CXXFLAGS += -Wno-unused-parameter
     QMAKE_CXXFLAGS += -Wno-deprecated-declarations
 }
+
+!exists($${DESTDIR}/sstd_app_contex){
+    QMAKE_POST_LINK += $$escape_expand(\\n\\t)$${DESTDIR}/sstd_copy_qml $${PWD}/sstd_app_contex $${DESTDIR}/sstd_app_contex release
+    export(QMAKE_POST_LINK)
+}
+
