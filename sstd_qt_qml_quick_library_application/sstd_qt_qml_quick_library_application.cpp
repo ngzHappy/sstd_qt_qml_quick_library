@@ -15,13 +15,33 @@ namespace sstd {
 #endif
     }
 
-    QtApplication::QtApplication(int & argc, char ** argv, BeforeAfterQtApplication&&) :
+    QtApplication::QtApplication(int & argc, char ** argv, BeforeAfterQtApplication && arg) {
+        arg.construct(argv[0]);
+        thisData = sstd_make_shared<_QtApplication>(argc, argv, std::move(arg));
+    }
+
+    _QtApplication::_QtApplication(int & argc, char ** argv, BeforeAfterQtApplication&&) :
         QApplication(argc, argv),
         Application(argc, argv) {
     }
 
-    /*this function will call before QtApplication construct*/
-    BeforeAfterQtApplication::BeforeAfterQtApplication(QString argStyle) {
+    extern int & defaultMultiSampleSize();
+    void BeforeAfterQtApplication::construct(const char * argv) {
+        do{
+            /*读取配置文件，尝试更改multisample值*/
+            sstd::filesystem::path varRootPathApplication{argv};
+            sstd::filesystem::path varRootPath = varRootPathApplication.parent_path();
+            auto varFileName = varRootPath / "sstd_app_contex"sv / "multisample.txt"sv ;
+            std::ifstream varStream{ sstd::getFileStreamPath(varFileName),std::ios::binary };
+            varStream.sync_with_stdio(false);
+            if (varStream.is_open()==false) {
+                qWarning() << QStringLiteral("can not find sstd_app_contex/multisample.txt");
+                break;
+            }
+            int varMultiSamleValue{ -1 };
+            varStream >> varMultiSamleValue;
+            defaultMultiSampleSize() = varMultiSamleValue;
+        } while (false);
         /*初始化随机种子*/
         \uacf1_call_if(true, ::srand(static_cast<unsigned>(::time(nullptr))));
         /*支持高分屏*/
@@ -34,33 +54,23 @@ namespace sstd {
         \uacf1_call_if(!isRelease(), ::qputenv("QSG_RENDER_LOOP", QByteArrayLiteral("basic")));
         /*debug模式开始import调试输出*/
         \uacf1_call_if(!isRelease(), ::qputenv("QML_IMPORT_TRACE", QByteArrayLiteral("1")));
+    }
+
+    /*this function will call before QtApplication construct*/
+    BeforeAfterQtApplication::BeforeAfterQtApplication(QString argStyle) {
         /*设置样式*/
-        if(!argStyle.isEmpty()){
+        if (!argStyle.isEmpty()) {
             const auto varStypeFileName = argStyle.toLocal8Bit();
-            ::qputenv("QT_QUICK_CONTROLS_CONF",varStypeFileName );
+            ::qputenv("QT_QUICK_CONTROLS_CONF", varStypeFileName);
         }
     }
 
-    extern int & defaultMultiSampleSize();
     namespace {
         class OpenGLConstruct {
         public:
             QOffscreenSurface surface;
             QOpenGLContext contex;
             inline OpenGLConstruct() {
-                do{/*读取配置文件，尝试更改multisample值*/
-                    QDir varAppDir{ qApp->applicationDirPath() };
-                    auto varFileName = varAppDir.absoluteFilePath( QStringLiteral("sstd_app_contex/multisample.txt") );
-                    QFile varFile{ varFileName };
-                    if( false == varFile.open(QIODevice::ReadOnly) ){
-                        qWarning() << QStringLiteral("can not find : sstd_app_contex/multisample.txt");
-                        break;
-                    }
-                    QTextStream varStream{ &varFile };
-                    int varMultiSamleValue{ -1 };
-                    varStream >> varMultiSamleValue;
-                    defaultMultiSampleSize() = varMultiSamleValue;
-                }while(false);
                 surface.setFormat(sstd::getDefaultQSurfaceFormat());
                 surface.create();
                 contex.setFormat(sstd::getDefaultQSurfaceFormat());
