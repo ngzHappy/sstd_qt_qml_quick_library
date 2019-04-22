@@ -15,14 +15,17 @@ namespace sstd {
 #endif
     }
 
-    QtApplication::QtApplication(int & argc, char ** argv, BeforeAfterQtApplication && arg) {
-        arg.construct(argv[0]);
-        thisData = sstd_make_shared<_QtApplication>(argc, argv, std::move(arg));
+    BeforeAfterQtApplicationControl::BeforeAfterQtApplicationControl(int & argc,
+                                                                     char ** argv,
+                                                                     BeforeAfterQtApplication&&args):
+        thisArgC(argc),
+        thisArgv(argv){
+        args.construct(argv[0]);
     }
 
-    _QtApplication::_QtApplication(int & argc, char ** argv, BeforeAfterQtApplication&&) :
-        QApplication(argc, argv),
-        Application(argc, argv) {
+    QtApplication::QtApplication(BeforeAfterQtApplicationControl && arg) :
+        QApplication(arg.thisArgC,arg.thisArgv),
+        Application(arg.thisArgC,arg.thisArgv) {
     }
 
     extern int & defaultMultiSampleSize();
