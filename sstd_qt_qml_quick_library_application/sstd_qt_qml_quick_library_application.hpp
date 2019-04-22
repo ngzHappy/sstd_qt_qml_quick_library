@@ -46,7 +46,7 @@ namespace sstd {
         public sstd::Application {
         Q_OBJECT
     public:
-        inline QtApplication(int & argC, char ** argV, BeforeAfterQtApplication&& argAppendArgs)
+        inline QtApplication(int & argC, char ** argV, BeforeAfterQtApplication&& argAppendArgs = {})
             :QtApplication(BeforeAfterQtApplicationControl{ argC,argV,std::move(argAppendArgs) }) {
         }
     private:
