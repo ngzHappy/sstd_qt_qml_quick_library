@@ -16,36 +16,36 @@ namespace sstd {
     }
 
     BeforeAfterQtApplicationControl::BeforeAfterQtApplicationControl(int & argc,
-                                                                     char ** argv,
-                                                                     BeforeAfterQtApplication&&args):
+        char ** argv,
+        BeforeAfterQtApplication&&args) :
         thisArgC(argc),
-        thisArgv(argv){
+        thisArgv(argv) {
         args.construct(argv[0]);
     }
 
     QtApplication::QtApplication(BeforeAfterQtApplicationControl && arg) :
-        QApplication(arg.thisArgC,arg.thisArgv),
-        Application(arg.thisArgC,arg.thisArgv) {
+        QApplication(arg.thisArgC, arg.thisArgv),
+        Application(arg.thisArgC, arg.thisArgv) {
     }
 
     extern int & defaultMultiSampleSize();
     void BeforeAfterQtApplication::construct(const char * argv) {
-        do{
+        do {
             /*读取配置文件，尝试更改multisample值*/
-            sstd::filesystem::path varRootPathApplication{argv};
+            sstd::filesystem::path varRootPathApplication{ argv };
             sstd::filesystem::path varRootPath = varRootPathApplication.parent_path();
-            auto varFileName = varRootPath / "sstd_app_contex"sv / "multisample.txt"sv ;
+            auto varFileName = varRootPath / "sstd_app_contex"sv / "multisample.txt"sv;
             std::ifstream varStream{ sstd::getFileStreamPath(varFileName),std::ios::binary };
             varStream.sync_with_stdio(false);
-            if (varStream.is_open()==false) {
+            if (varStream.is_open() == false) {
                 qWarning() << QStringLiteral("can not find sstd_app_contex/multisample.txt");
                 break;
             }
             int varMultiSamleValue{ -1 };
             varStream >> varMultiSamleValue;
             defaultMultiSampleSize() = varMultiSamleValue;
-            assert(varMultiSamleValue<256);
-            assert(varMultiSamleValue>-256);
+            assert(varMultiSamleValue < 256);
+            assert(varMultiSamleValue > -256);
         } while (false);
         /*初始化随机种子*/
         \uacf1_call_if(true, ::srand(static_cast<unsigned>(::time(nullptr))));

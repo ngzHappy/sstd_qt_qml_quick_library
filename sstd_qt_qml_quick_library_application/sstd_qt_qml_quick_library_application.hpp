@@ -8,7 +8,7 @@ namespace sstd {
     class SSTD_QT_SYMBOL_DECL BeforeAfterQtApplication {
         friend class BeforeAfterQtApplicationControl;
     public:
-        BeforeAfterQtApplication(QString={});
+        BeforeAfterQtApplication(QString = {});
         ~BeforeAfterQtApplication();
     private:
         void construct(const char *);
@@ -19,10 +19,10 @@ namespace sstd {
     };
 
     class QtApplication;
-    class SSTD_QT_SYMBOL_DECL BeforeAfterQtApplicationControl{
+    class SSTD_QT_SYMBOL_DECL BeforeAfterQtApplicationControl {
         friend class QtApplication;
     public:
-        BeforeAfterQtApplicationControl(int &,char **,BeforeAfterQtApplication&&);
+        BeforeAfterQtApplicationControl(int &, char **, BeforeAfterQtApplication&&);
     private:
         int & thisArgC;
         char ** const thisArgv;
@@ -46,8 +46,8 @@ namespace sstd {
         public sstd::Application {
         Q_OBJECT
     public:
-        inline QtApplication(int & argC, char ** argV,BeforeAfterQtApplication&& argAppendArgs)
-            :QtApplication(BeforeAfterQtApplicationControl{argC,argV,std::move(argAppendArgs)}) {
+        inline QtApplication(int & argC, char ** argV, BeforeAfterQtApplication&& argAppendArgs)
+            :QtApplication(BeforeAfterQtApplicationControl{ argC,argV,std::move(argAppendArgs) }) {
         }
     private:
         QtApplication(BeforeAfterQtApplicationControl&&);
