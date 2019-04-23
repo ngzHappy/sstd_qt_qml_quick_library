@@ -28,6 +28,23 @@ namespace sstd {
         Application(arg.thisArgC, arg.thisArgv) {
     }
 
+    template<typename T>
+    inline void remove_utf8_bom(T & argReadStream) {
+        std::array varBuffer{ '1','2','3' };
+        argReadStream.read(varBuffer.data(), varBuffer.size());
+        if (argReadStream.gcount() < 3) {
+        } else {
+            constexpr std::array varBom{ '\xEF','\xBB','\xBF' };
+            if (varBuffer == varBom) {
+                return;
+            }
+        }
+        argReadStream.clear();
+        argReadStream.seekg(0);
+        assert(argReadStream.good());
+        return;
+    }
+
     extern int & defaultMultiSampleSize();
     void BeforeAfterQtApplication::construct(const char * argv) {
         do {
@@ -41,6 +58,7 @@ namespace sstd {
                 qWarning() << QStringLiteral("can not find sstd_app_contex/multisample.txt");
                 break;
             }
+            remove_utf8_bom(varStream);
             int varMultiSamleValue{ -1 };
             varStream >> varMultiSamleValue;
             defaultMultiSampleSize() = varMultiSamleValue;
