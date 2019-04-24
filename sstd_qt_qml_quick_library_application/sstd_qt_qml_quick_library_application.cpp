@@ -102,6 +102,7 @@ namespace sstd {
                     contex->setFormat(sstd::getDefaultQSurfaceFormat());
                     contex->create();
                     contex->makeCurrent(&surface);
+                    qWarning("global shared opengl contex may be not right??");
                 } else {
                     globalContex = QOpenGLContext::globalShareContext();
                     globalContex->makeCurrent(&surface);
