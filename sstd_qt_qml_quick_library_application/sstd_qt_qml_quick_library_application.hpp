@@ -49,6 +49,8 @@ namespace sstd {
         inline QtApplication(int & argC, char ** argV, BeforeAfterQtApplication&& argAppendArgs = {})
             :QtApplication(BeforeAfterQtApplicationControl{ argC,argV,std::move(argAppendArgs) }) {
         }
+    public:
+        static QOpenGLContext * getGlobalSharedContex();
     private:
         QtApplication(BeforeAfterQtApplicationControl&&);
     private:

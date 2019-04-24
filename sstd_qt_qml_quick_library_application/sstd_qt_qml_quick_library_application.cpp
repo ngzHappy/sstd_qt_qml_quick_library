@@ -92,13 +92,20 @@ namespace sstd {
         class OpenGLConstruct {
         public:
             QOffscreenSurface surface;
-            QOpenGLContext contex;
+            std::optional< QOpenGLContext > contex;
+            QOpenGLContext * globalContex{ nullptr };
             inline OpenGLConstruct() {
                 surface.setFormat(sstd::getDefaultQSurfaceFormat());
                 surface.create();
-                contex.setFormat(sstd::getDefaultQSurfaceFormat());
-                contex.create();
-                contex.makeCurrent(&surface);
+                if (!QOpenGLContext::globalShareContext()) {
+                    contex.emplace();
+                    contex->setFormat(sstd::getDefaultQSurfaceFormat());
+                    contex->create();
+                    contex->makeCurrent(&surface);
+                } else {
+                    globalContex = QOpenGLContext::globalShareContext();
+                    globalContex->makeCurrent(&surface);
+                }
                 if (false == sstd::glew_initialize()) {
                     qFatal("can not init glew!!!");
                 }
@@ -108,14 +115,23 @@ namespace sstd {
         };
     }
 
+    OpenGLConstruct * globalOpenGlContex{ nullptr };
+
+    QOpenGLContext * QtApplication::getGlobalSharedContex() {
+        if (globalOpenGlContex->globalContex) {
+            return globalOpenGlContex->globalContex;
+        }
+        return &(*(globalOpenGlContex->contex));
+    }
+
     /*this function will call after QtApplication construct*/
     BeforeAfterQtApplication::~BeforeAfterQtApplication() {
         if (std::uncaught_exceptions() > 0) {
             return;
         }
         {
-            static auto varOpenGLContex = sstd_new<OpenGLConstruct>();
-            (void)varOpenGLContex;
+            assert(globalOpenGlContex == nullptr);
+            globalOpenGlContex = sstd_new<OpenGLConstruct>();
         }
         {
             /*强制加载QImage插件
