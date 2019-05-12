@@ -140,6 +140,12 @@ namespace sstd {
             QImage varImage{ QStringLiteral(":/qtandqmlglobal/image/foreceLoadQImage.png") };
             (void)varImage;
         }
+        {
+            /*强制加载字体*/
+            QImage varImage{ 100,100,QImage::Format_RGBA64 };
+            QPainter varPainter{ &varImage };
+            varPainter.drawText(QPoint{ 50,50 }, QStringLiteral("AAB"));
+        }
         if constexpr (!isRelease()) {
             /*设置Application Name*/
             auto varName = qApp->applicationName();
