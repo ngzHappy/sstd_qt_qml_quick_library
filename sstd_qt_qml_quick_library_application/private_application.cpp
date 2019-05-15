@@ -29,7 +29,12 @@ namespace sstd {
 
     namespace global {
 
-        StaticGlobal::StaticGlobal() : thisStart{ std::chrono::steady_clock::now() } {
+        inline auto whenCreate(){
+            const auto varAns =  std::chrono::steady_clock::now();
+            return varAns;
+        }
+
+        StaticGlobal::StaticGlobal() : thisStart{ whenCreate() } {
             QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
         }
 
