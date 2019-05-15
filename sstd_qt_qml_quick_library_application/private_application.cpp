@@ -49,7 +49,6 @@ QtObject {
         auto varContex = sstd_new<sstd::global::StaticGlobalContex>(engine,engine);
         varContex->setContextObject(globalObject);
         auto varAns = varComponent.beginCreate(varContex);
-        varAns->setParent( engine );
         varComponent.completeCreate();
         return varAns;
     });
