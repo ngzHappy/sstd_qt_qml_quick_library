@@ -158,10 +158,4 @@ namespace sstd {
         }
     }
 
-    QtStyledApplication::QtStyledApplication(int & argc,char ** argv) :
-        QtApplication(argc,argv) {
-        QQuickStyle::setStyle(QStringLiteral("Material"));
-        QQuickStyle::setFallbackStyle(QStringLiteral("Material"));
-    }
-
 }/*namespace sstd*/
