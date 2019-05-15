@@ -131,6 +131,7 @@ namespace sstd {
     }
 }
 
+/* import sstd.styled.app 1.0 //GlobalAppData */
 inline static void registerThis() {
     using namespace sstd::global;
     const char * globalURI = "sstd.styled.app";
