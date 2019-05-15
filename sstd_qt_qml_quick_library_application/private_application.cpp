@@ -14,7 +14,7 @@ namespace sstd {
         }
 
 #if defined(_DEBUG)
-        bool isQtStyledApplication{ false };
+        inline bool static isQtStyledApplication{ false };
 #endif
     }/* namespace global */
 
@@ -133,15 +133,12 @@ namespace sstd {
 
 /* import sstd.styled.app 1.0 //GlobalAppData */
 inline static void registerThis() {
-    using namespace sstd::global;
-    const char * globalURI = "sstd.styled.app";
-
-    qmlRegisterSingletonType< StaticGlobal >(globalURI, 1, 0, "GlobalAppData",
+    qmlRegisterSingletonType< sstd::global::StaticGlobal >("sstd.styled.app", 1, 0, "GlobalAppData",
         [](QQmlEngine *, QJSEngine *)->QObject * {
 #if defined(_DEBUG)
-        assert(isQtStyledApplication);
+        assert(sstd::global::isQtStyledApplication);
 #endif
-        return instanceStaticGlobal();
+        return sstd::global::instanceStaticGlobal();
     });
 }
 
