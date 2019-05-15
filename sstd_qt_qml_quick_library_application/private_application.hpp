@@ -23,14 +23,21 @@ namespace sstd {
             Q_OBJECT
         private:
             Q_PROPERTY(int version READ getVersion FINAL)
+        private:
+            Q_PROPERTY(QObject* privateSharedObject READ getPrivateSharedObject FINAL)
         public:
             StaticGlobal();
             ~StaticGlobal();
         public:
             int getVersion() const;
+            inline QObject *getPrivateSharedObject() const;
         private:
             sstd_class(StaticGlobal);
         };
+
+        inline QObject *StaticGlobal::getPrivateSharedObject() const {
+            return const_cast<StaticGlobal*>(this);
+        }
 
     }/*namespace global*/
 }/*namespace sstd*/

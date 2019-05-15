@@ -7,14 +7,22 @@
 
 namespace sstd {
 
-    inline QString fallBackStyle() {
-        return QStringLiteral("Material");
-    }
+    namespace global {
+        inline QString fallBackStyle() {
+            return QStringLiteral("Material");
+        }
+#if defined(_DEBUG)
+        bool isQtStyledApplication{false};
+#endif
+    }/* namespace global */
 
     QtStyledApplication::QtStyledApplication(int & argc, char ** argv) :
         QtApplication(argc, argv) {
-        QQuickStyle::setStyle(fallBackStyle());
-        QQuickStyle::setFallbackStyle(fallBackStyle());
+        QQuickStyle::setStyle(global::fallBackStyle());
+        QQuickStyle::setFallbackStyle(global::fallBackStyle());
+#if defined(_DEBUG)
+        global::isQtStyledApplication = true;
+#endif
     }
 
     namespace global {
@@ -53,12 +61,15 @@ import QtQuick.Controls 2.12
 import QtQuick.Controls.Material 2.12
 
 QtObject {
-    property var appStyle : Material ;
+    property var appStyle     : Material ;
+    property var sharedObject : privateSharedObject ;
 }
 
 )"), QUrl{});
+#if defined(_DEBUG)
         assert(engine);
-        assert(fallBackStyle() == QQuickStyle::setFallbackStyle());
+        assert(sstd::global::isQtStyledApplication);
+#endif
         static auto globalObject = sstd_new<sstd::global::StaticGlobal>();
         auto varContex = sstd_new<sstd::global::StaticGlobalContex>(engine, engine);
         varContex->setContextObject(globalObject);
