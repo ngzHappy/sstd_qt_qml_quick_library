@@ -42,7 +42,7 @@ QtObject {
 )"), QUrl{});
         assert(engine);
         static auto globalObject = sstd_new<sstd::global::StaticGlobal>();
-        auto varContex = sstd_virtual_new<sstd::global::StaticGlobalContex>(engine,engine);
+        auto varContex = sstd_new<sstd::global::StaticGlobalContex>(engine,engine);
         varContex->setContextObject(globalObject);
         auto varAns = varComponent.beginCreate(varContex);
         varAns->setParent( engine );
