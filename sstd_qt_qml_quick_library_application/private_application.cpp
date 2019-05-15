@@ -12,7 +12,7 @@ namespace sstd {
             return QStringLiteral("Material");
         }
 #if defined(_DEBUG)
-        bool isQtStyledApplication{false};
+        bool isQtStyledApplication{ false };
 #endif
     }/* namespace global */
 
@@ -27,13 +27,6 @@ namespace sstd {
 
     namespace global {
 
-        StaticGlobalContex::StaticGlobalContex(QQmlEngine *engine, QObject *parent) :
-            Super(engine, parent) {
-        }
-
-        StaticGlobalContex::~StaticGlobalContex() {
-        }
-
         StaticGlobal::StaticGlobal() {
         }
 
@@ -46,13 +39,35 @@ namespace sstd {
             return 1;
         }
 
+        Static::Static(StaticGlobal * a, QObject * b) :
+            thisSharedObject{ a },
+            thisAppStyle{ b } {
+        }
+
+        Static::~Static() {
+        }
+
+        inline auto instanceStaticGlobal() {
+            static auto globalAns = sstd_new<StaticGlobal>();
+            return globalAns;
+        }
+
     }
 }
 
 inline static void registerThis() {
-    qmlRegisterSingletonType<sstd::global::StaticGlobal>("sstd.styled.app", 1, 0,
-        "GlobalAppData",
-        [](QQmlEngine *engine, QJSEngine *) -> QObject * {
+    using namespace sstd::global;
+    const char * globalURI = "sstd.styled.app";
+    qmlRegisterUncreatableType< StaticGlobal >(globalURI, 1, 0,
+        "StaticGlobal","can not create StaticGlobal");
+    qmlRegisterSingletonType< Static >(globalURI, 1, 0, "GlobalAppData",
+        [](QQmlEngine *engine, QJSEngine *)->QObject * {
+
+#if defined(_DEBUG)
+        assert(engine);
+        assert(sstd::global::isQtStyledApplication);
+#endif
+
         QQmlComponent varComponent{ engine };
         varComponent.setData(QByteArrayLiteral(u8R"(
 
@@ -60,22 +75,24 @@ import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Controls.Material 2.12
 
-QtObject {
-    property var appStyle     : Material ;
-    property var sharedObject : privateSharedObject ;
+Pane {
+    // property var xxx : ApplicationWindow.window.Material ;
+    function getStyle() {
+ 
+        return ApplicationWindow.window.appStyle ;
+    }
 }
 
 )"), QUrl{});
-#if defined(_DEBUG)
-        assert(engine);
-        assert(sstd::global::isQtStyledApplication);
-#endif
-        static auto globalObject = sstd_new<sstd::global::StaticGlobal>();
-        auto varContex = sstd_new<sstd::global::StaticGlobalContex>(engine, engine);
-        varContex->setContextObject(globalObject);
-        auto varAns = varComponent.beginCreate(varContex);
+
+        auto varContexObject = varComponent.beginCreate(engine->rootContext());
         varComponent.completeCreate();
+
+        auto varAns = sstd_new<Static>(instanceStaticGlobal(), varContexObject);
+        varContexObject->setParent(varAns);
+
         return varAns;
+
     });
 }
 
