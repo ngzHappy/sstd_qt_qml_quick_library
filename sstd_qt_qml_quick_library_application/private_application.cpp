@@ -30,8 +30,8 @@ namespace sstd {
     namespace global {
 
         inline auto whenCreate(){
-            const auto varAns =  std::chrono::steady_clock::now();
-            return varAns;
+            const auto static globalAns =  std::chrono::steady_clock::now();
+            return globalAns;
         }
 
         StaticGlobal::StaticGlobal() : thisStart{ whenCreate() } {
