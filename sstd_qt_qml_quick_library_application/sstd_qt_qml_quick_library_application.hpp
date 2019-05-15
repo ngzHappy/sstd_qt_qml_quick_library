@@ -57,4 +57,12 @@ namespace sstd {
         sstd_class(QtApplication);
     };
 
+    class SSTD_QT_SYMBOL_DECL QtStyledApplication : public QtApplication {
+        Q_OBJECT
+    public:
+        QtStyledApplication(int & argc,char ** argv);
+    private:
+        sstd_class(QtStyledApplication);
+    };
+
 }/*namespace sstd*/

@@ -29,6 +29,9 @@ HEADERS += $$PWD/sstd_qt_qml_quick_library_gzip/sstd_qt_qml_quick_library_gzip.h
 SOURCES += $$PWD/sstd_qt_qml_quick_library_application/sstd_qt_qml_quick_library_application.cpp
 HEADERS += $$PWD/sstd_qt_qml_quick_library_application/sstd_qt_qml_quick_library_application.hpp
 
+SOURCES += $$PWD/sstd_qt_qml_quick_library_application/private_application.cpp
+HEADERS += $$PWD/sstd_qt_qml_quick_library_application/private_application.hpp
+
 SOURCES += $$PWD/sstd_qt_qml_quick_library_opengl_default_format/sstd_qt_qml_quick_library_opengl_default_format.cpp
 HEADERS += $$PWD/sstd_qt_qml_quick_library_opengl_default_format/sstd_qt_qml_quick_library_opengl_default_format.hpp
 

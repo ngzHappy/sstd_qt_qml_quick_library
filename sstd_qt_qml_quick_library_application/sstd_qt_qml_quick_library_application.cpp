@@ -1,6 +1,7 @@
 ﻿#include "sstd_qt_qml_quick_library_application.hpp"
 #include "../sstd_qt_qml_quick_library_glew/sstd_glew_initialization.hpp"
 #include <QtCore/QtCore>
+#include <QtQuickControls2/QtQuickControls2>
 #include <exception>
 
 #define \uacf1_call_if(\uaca1,\uaca2) if constexpr( \uaca1 ){  \uaca2 ; } static_assert(true)
@@ -155,6 +156,12 @@ namespace sstd {
                 qApp->setApplicationName(varName);
             }
         }
+    }
+
+    QtStyledApplication::QtStyledApplication(int & argc,char ** argv) :
+        QtApplication(argc,argv) {
+        QQuickStyle::setStyle(QStringLiteral("Material"));
+        QQuickStyle::setFallbackStyle(QStringLiteral("Material"));
     }
 
 }/*namespace sstd*/
