@@ -50,19 +50,19 @@ namespace sstd {
         namespace dark {
 
             inline QColor globalGetAccent() {
-                return QColor(0x0f4, 0x08f, 0x0b1);
+                return qRgb(0x0'f4, 0x0'8f, 0x0'b1);
             }
 
             inline QColor globalGetBackground() {
-                return QColor(0x030, 0x030, 0x030);
+                return qRgb(0x0'30, 0x0'30, 0x0'30);
             }
 
             inline QColor globalGetForeground() {
-                return QColor(0x0ff, 0x0ff, 0x0ff);
+                return qRgb(0x0'ff, 0x0'ff, 0x0'ff);
             }
 
             inline QColor globalGetPrimary() {
-                return QColor(0x09f, 0x0a8, 0x0da);
+                return qRgb(0x0'9f, 0x0'a8, 0x0'da);
             }
 
         }/*namespace drak*/
@@ -70,19 +70,19 @@ namespace sstd {
         namespace light {
 
             inline QColor globalGetAccent() {
-                return QColor(0x0e9, 0x01e, 0x063);
+                return qRgb(0x0'e9, 0x0'1e, 0x0'63);
             }
 
             inline QColor globalGetBackground() {
-                return QColor(0x0fa, 0x0fa, 0x0fa);
+                return qRgb(0x0'fa, 0x0'fa, 0x0'fa);
             }
 
             inline QColor globalGetForeground() {
-                return QColor(0x000, 0x000, 0x000);
+                return qRgb(0x0'00, 0x0'00, 0x0'00);
             }
 
             inline QColor globalGetPrimary() {
-                return QColor(0x03f, 0x051, 0x0b5);
+                return qRgb(0x0'3f, 0x0'51, 0x0'b5);
             }
 
         }/*namespace light*/
