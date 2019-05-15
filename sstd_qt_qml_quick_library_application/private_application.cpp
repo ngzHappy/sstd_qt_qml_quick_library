@@ -29,7 +29,7 @@ namespace sstd {
 
     namespace global {
 
-        StaticGlobal::StaticGlobal() {
+        StaticGlobal::StaticGlobal() : thisStart{ std::chrono::steady_clock::now() } {
             QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
         }
 
@@ -109,6 +109,12 @@ namespace sstd {
 
         bool StaticGlobal::isDark() const {
             return thisIsDark;
+        }
+
+        qlonglong StaticGlobal::timeSinceCreate() const{
+            auto const varNow = std::chrono::steady_clock::now();
+            return std::chrono::duration_cast<
+                    std::chrono::milliseconds>(varNow - thisStart).count();
         }
 
         void StaticGlobal::setIsDark( bool arg) {

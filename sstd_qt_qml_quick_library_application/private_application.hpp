@@ -4,6 +4,7 @@
 #include <QtCore/qobject.h>
 #include <QtQml/qqmlcontext.h>
 #include <QtGui/qcolor.h>
+#include <chrono>
 
 namespace sstd {
     namespace global {
@@ -38,12 +39,15 @@ namespace sstd {
             QColor getPrimary() const;
             bool isDark() const;
         public:
+            Q_SLOT qlonglong timeSinceCreate() const;
+        public:
             Q_SIGNAL void accentChanged();
             Q_SIGNAL void backgroundChanged();
             Q_SIGNAL void foregroundChanged();
             Q_SIGNAL void primaryChanged();
         private:
             bool thisIsDark{ false };
+            std::chrono::steady_clock::time_point const thisStart;
         private:
             sstd_class(StaticGlobal);
         };
