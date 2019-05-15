@@ -6,7 +6,7 @@
 namespace sstd {
     namespace global {
 
-        StaticGlobalContex::StaticGlobalContex(QQmlEngine *engine, QObject *parent ) : 
+        StaticGlobalContex::StaticGlobalContex(QQmlEngine *engine, QObject *parent ) :
             Super(engine,parent) {
         }
 
@@ -19,6 +19,10 @@ namespace sstd {
         StaticGlobal::~StaticGlobal() {
             /*this shoule never call*/
             assert(false);
+        }
+
+        int StaticGlobal::getVersion() const{
+            return 1;
         }
 
     }

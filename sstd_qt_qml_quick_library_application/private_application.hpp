@@ -21,9 +21,13 @@ namespace sstd {
 
         class StaticGlobal : public QObject {
             Q_OBJECT
+        private:
+            Q_PROPERTY(int version READ getVersion FINAL)
         public:
             StaticGlobal();
             ~StaticGlobal();
+        public:
+            int getVersion() const;
         private:
             sstd_class(StaticGlobal);
         };
