@@ -145,7 +145,7 @@ namespace sstd {
 /* import sstd.styled.app 1.0 //GlobalAppData */
 inline static void registerThis() {
     constexpr const char * globalURI = "sstd.styled.app";
-    qmlRegisterType(QUrl("qrc:/qtqndqmlglobal/buildin_qml/buildin_qml/StyledApplicationWindow.qml"),
+    qmlRegisterType(QUrl("qrc:/qtqndqmlglobal/buildin_qml/StyledApplicationWindow.qml"),
                     globalURI,1,0,"StyledApplicationWindow");
     qmlRegisterSingletonType< sstd::global::StaticGlobal >(globalURI, 1, 0, "GlobalAppData",
         [](QQmlEngine *, QJSEngine *)->QObject * {
