@@ -150,9 +150,9 @@ namespace sstd {
 inline static void registerThis(QCoreApplication *arg) {
     const auto varDirPath = arg->applicationDirPath();
 #if defined(_DEBUG)
-#define the_qml "theqml_the_debug/"
+#define the_qml "sstd_app_contex/theqml_the_debug/"
 #else
-#define the_qml "theqml/"
+#define the_qml "sstd_app_contex/theqml/"
 #endif
     constexpr const char * globalURI = "sstd.styled.app";
     qmlRegisterType(sstd::getLocalFileFullPath(
