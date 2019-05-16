@@ -2,7 +2,4 @@
     <qresource prefix="/qtandqmlglobal/image">
         <file>foreceLoadQImage.png</file>
     </qresource>
-    <qresource prefix="/qtqndqmlglobal">
-        <file>buildin_qml/StyledApplicationWindow.qml</file>
-    </qresource>
 </RCC>

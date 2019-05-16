@@ -58,6 +58,13 @@ win32:{
 }
 ###################################################################################
 
+QMLSOURCES += $$PWD/theqml_the_debug/sstd_qt_qml_quick_library/StyledApplicationWindow.qml
+
+lupdate_only{
+    SOURCES += $$QMLSOURCES
+}
+
+###################################################################################
 RESOURCES += $$PWD/resource/sstd_qt_and_qml_library.qrc
 
 #remove some build warning
@@ -68,8 +75,22 @@ win32-msvc*{
     QMAKE_CXXFLAGS += -Wno-deprecated-declarations
 }
 
+isEmpty(QMAKE_POST_LINK){
+    QMAKE_POST_LINK += $${SSTD_LIBRARY_OUTPUT_PATH}/sstd_copy_qml $${PWD} $${PWD} skip
+}else{
+    QMAKE_POST_LINK += $$escape_expand(\\n\\t)$${SSTD_LIBRARY_OUTPUT_PATH}/sstd_copy_qml $${PWD} $${PWD} skip
+}
+
+#all application config
 !exists($${DESTDIR}/sstd_app_contex){
     QMAKE_POST_LINK += $$escape_expand(\\n\\t)$${DESTDIR}/sstd_copy_qml $${PWD}/sstd_app_contex $${DESTDIR}/sstd_app_contex release
-    export(QMAKE_POST_LINK)
 }
+
+#the library qml files
+CONFIG(debug,debug|release) {
+    QMAKE_POST_LINK += $$escape_expand(\\n\\t)$${SSTD_LIBRARY_OUTPUT_PATH}/sstd_copy_qml $${PWD}/theqml_the_debug $${SSTD_LIBRARY_OUTPUT_PATH}/theqml_the_debug debug
+}else{
+    QMAKE_POST_LINK += $$escape_expand(\\n\\t)$${SSTD_LIBRARY_OUTPUT_PATH}/sstd_copy_qml $${PWD}/theqml_the_debug $${SSTD_LIBRARY_OUTPUT_PATH}/theqml release
+}
+export(QMAKE_POST_LINK)
 
