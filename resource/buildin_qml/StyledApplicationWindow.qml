@@ -5,7 +5,7 @@ import sstd.styled.app 1.0
 
 ApplicationWindow {
 
-    property bool isDark: GlobalAppData.isDark
+    readonly property bool isDark: GlobalAppData.isDark
     function updateTheme(){
         if( isDark ){
             Material.theme = Material.Dark ;
