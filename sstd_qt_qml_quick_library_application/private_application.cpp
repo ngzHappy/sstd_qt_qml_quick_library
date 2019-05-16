@@ -3,6 +3,7 @@
 #include <QtQuick/QtQuick>
 #include <QtQuickControls2/QtQuickControls2>
 #include "sstd_qt_qml_quick_library_application.hpp"
+#include "../sstd_qt_qml_quick_library_path/sstd_qt_qml_quick_library_path.hpp"
 #include <cassert>
 
 inline static void registerThis(QCoreApplication *);
@@ -32,8 +33,8 @@ namespace sstd {
 
     namespace global {
 
-        inline auto whenCreate(){
-            const auto static globalAns =  std::chrono::steady_clock::now();
+        inline auto whenCreate() {
+            const auto static globalAns = std::chrono::steady_clock::now();
             return globalAns;
         }
 
@@ -119,13 +120,13 @@ namespace sstd {
             return thisIsDark;
         }
 
-        qlonglong StaticGlobal::timeSinceCreate() const{
+        qlonglong StaticGlobal::timeSinceCreate() const {
             auto const varNow = std::chrono::steady_clock::now();
             return std::chrono::duration_cast<
-                    std::chrono::milliseconds>(varNow - thisStart).count();
+                std::chrono::milliseconds>(varNow - thisStart).count();
         }
 
-        void StaticGlobal::setIsDark( bool arg) {
+        void StaticGlobal::setIsDark(bool arg) {
             if (arg == thisIsDark) {
                 return;
             }
@@ -145,8 +146,6 @@ namespace sstd {
     }
 }
 
-#include "../sstd_qt_qml_quick_library_path/sstd_qt_qml_quick_library_path.hpp"
-
 /* import sstd.styled.app 1.0 //GlobalAppData */
 inline static void registerThis(QCoreApplication *arg) {
     const auto varDirPath = arg->applicationDirPath();
@@ -156,9 +155,10 @@ inline static void registerThis(QCoreApplication *arg) {
 #define the_qml "theqml/"
 #endif
     constexpr const char * globalURI = "sstd.styled.app";
-    qmlRegisterType(sstd:: getLocalFileFullPath(varDirPath,
-                    QStringLiteral(the_qml/**/"sstd_qt_qml_quick_library/StyledApplicationWindow.qml")),
-                    globalURI,1,0,"StyledApplicationWindow");
+    qmlRegisterType(sstd::getLocalFileFullPath(
+        QStringLiteral(the_qml/**/"sstd_qt_qml_quick_library/StyledApplicationWindow.qml"),
+        varDirPath),
+        globalURI, 1, 0, "StyledApplicationWindow");
     qmlRegisterSingletonType< sstd::global::StaticGlobal >(globalURI, 1, 0, "GlobalAppData",
         [](QQmlEngine *, QJSEngine *)->QObject * {
 #if defined(_DEBUG)
