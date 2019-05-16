@@ -1,5 +1,5 @@
 <RCC>
     <qresource prefix="/qtandqmlglobal/image">
-        <file>foreceLoadQImage.png</file>
+        <file>forceLoadQImage.png</file>
     </qresource>
 </RCC>
