@@ -28,19 +28,24 @@ namespace sstd {
             argApp,
             argEngine,
             argUrl);
-        varConnectData->connectIndex =
-            argEngine->connect(argEngine, &QQmlApplicationEngine::objectCreated,
-                argApp, [varConnectData](QObject *argAnsObj, const QUrl &argAnsUrl) {
-            if (argAnsUrl == varConnectData->url) {
-                varConnectData->engine->disconnect(varConnectData->connectIndex);
-            } else {
-                return;
-            }
-            if (!argAnsObj) {
-                varConnectData->app->exit(-1);
-            }
-        });
-        argEngine->load(argUrl);
+        QMetaObject::invokeMethod(argApp, [varConnectData]() {
+            auto & argEngine = varConnectData->engine;
+            auto & argApp = varConnectData->app;
+            auto & argUrl = varConnectData->url;
+            varConnectData->connectIndex =
+                argEngine->connect(argEngine, &QQmlApplicationEngine::objectCreated,
+                    argApp, [varConnectData](QObject *argAnsObj, const QUrl &argAnsUrl) {
+                if (argAnsUrl == varConnectData->url) {
+                    varConnectData->engine->disconnect(varConnectData->connectIndex);
+                } else {
+                    return;
+                }
+                if (!argAnsObj) {
+                    varConnectData->app->exit(-1);
+                }
+            });
+            argEngine->load(argUrl);
+        }, Qt::QueuedConnection);
     }
 
 }/*namespace sstd*/
