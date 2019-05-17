@@ -21,3 +21,5 @@ namespace _theSSTDQtQmlQuickLibraryFile {
 #include "sstd_qt_qml_quick_library_glew/sstd_using_glew.hpp"
 #include "sstd_qt_qml_quick_library_glew/sstd_glew_utility.hpp"
 #include "sstd_qt_qml_quick_library_path/sstd_qt_qml_quick_library_path.hpp"
+#include "sstd_qt_qml_quick_library_checked_load_qml_file/sstd_qt_qml_quick_library_checked_load_qml_file.hpp"
+
