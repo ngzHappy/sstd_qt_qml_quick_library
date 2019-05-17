@@ -4,10 +4,17 @@ namespace sstd {
 
         class ConnectData {
         public:
-            QCoreApplication * app;
-            QQmlApplicationEngine * engine;
-            QUrl url;
+            QCoreApplication * const app;
+            QQmlApplicationEngine * const engine;
+            QUrl const url;
             QMetaObject::Connection connectIndex;
+        public:
+            inline ConnectData(QCoreApplication * argApp,
+                QQmlApplicationEngine * argEngine,
+                const QUrl & argUrl) : app{ argApp },
+                engine{ argEngine },
+                url(argUrl) {
+            }
         private:
             sstd_class(ConnectData);
         };
