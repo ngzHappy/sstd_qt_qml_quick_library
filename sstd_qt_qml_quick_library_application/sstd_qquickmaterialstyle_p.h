@@ -7,7 +7,7 @@ namespace sstd{
 class QQuickMaterialStyle : public QQuickAttachedObject
 {
     Q_OBJECT
-    Q_PROPERTY(Theme theme READ theme WRITE setTheme RESET resetTheme NOTIFY themeChanged FINAL)
+    Q_PROPERTY(Theme theme READ theme NOTIFY themeChanged FINAL)
     Q_PROPERTY(QVariant primary READ primary WRITE setPrimary RESET resetPrimary NOTIFY primaryChanged FINAL)
     Q_PROPERTY(QVariant accent READ accent WRITE setAccent RESET resetAccent NOTIFY accentChanged FINAL)
     Q_PROPERTY(QVariant foreground READ foreground WRITE setForeground RESET resetForeground NOTIFY foregroundChanged FINAL)
