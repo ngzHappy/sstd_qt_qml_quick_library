@@ -5,22 +5,15 @@
 #include <QtQml/qqmlcontext.h>
 #include <QtGui/qcolor.h>
 #include <chrono>
+#include "sstd_qquickmaterialstyle_p.h"
 
 namespace sstd {
     namespace global {
 
-        class StaticGlobal : public QObject {
+        class StaticGlobal : public sstd::QQuickMaterialStyle {
             Q_OBJECT
         private:
-            Q_PROPERTY(int version READ getVersion FINAL)
-        private:
-            Q_PROPERTY(QColor accent READ getAccent NOTIFY accentChanged)
-        private:
-            Q_PROPERTY(QColor background READ getBackground NOTIFY backgroundChanged)
-        private:
-            Q_PROPERTY(QColor foreground READ getForeground NOTIFY foregroundChanged)
-        private:
-            Q_PROPERTY(QColor primary READ getPrimary NOTIFY primaryChanged)
+            Q_PROPERTY(int version READ getVersion CONSTANT FINAL)
         private:
             Q_PROPERTY(bool isDark READ isDark WRITE setIsDark NOTIFY isDarkChanged)
         public:
@@ -31,26 +24,21 @@ namespace sstd {
         public:
             void setIsDark(bool);
             Q_SIGNAL void isDarkChanged();
-        public:
-            int    getElevation() const;
-            QColor getAccent() const;
-            QColor getBackground() const;
-            QColor getForeground() const;
-            QColor getPrimary() const;
-            bool isDark() const;
+            inline bool isDark() const;
         public:
             Q_SLOT qlonglong timeSinceCreate() const;
-        public:
-            Q_SIGNAL void accentChanged();
-            Q_SIGNAL void backgroundChanged();
-            Q_SIGNAL void foregroundChanged();
-            Q_SIGNAL void primaryChanged();
         private:
             bool thisIsDark{ false };
             std::chrono::steady_clock::time_point const thisStart;
         private:
+            void privateUpdateTheme();
+        private:
             sstd_class(StaticGlobal);
         };
+
+        inline bool StaticGlobal::isDark() const{
+            return thisIsDark;
+        }
 
     }/*namespace global*/
 }/*namespace sstd*/

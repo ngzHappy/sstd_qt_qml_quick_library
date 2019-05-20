@@ -18,7 +18,6 @@ ApplicationWindow {
     }
     Component.onCompleted: {
         updateTheme();
-        visible = true ;
     }
 
 }

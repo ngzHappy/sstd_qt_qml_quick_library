@@ -4,6 +4,8 @@ TEMPLATE = lib
 QT += gui_private
 QT += core_private
 
+QT += quickcontrols2_private
+
 DEFINES *= SSTD_QT_BUILD_SOURCE
 
 CONFIG(debug,debug|release){
@@ -31,6 +33,9 @@ HEADERS += $$PWD/sstd_qt_qml_quick_library_application/sstd_qt_qml_quick_library
 
 SOURCES += $$PWD/sstd_qt_qml_quick_library_application/private_application.cpp
 HEADERS += $$PWD/sstd_qt_qml_quick_library_application/private_application.hpp
+
+SOURCES += $$PWD/sstd_qt_qml_quick_library_application/sstd_qquickmaterialstyle.cpp
+HEADERS += $$PWD/sstd_qt_qml_quick_library_application/sstd_qquickmaterialstyle_p.h
 
 SOURCES += $$PWD/sstd_qt_qml_quick_library_opengl_default_format/sstd_qt_qml_quick_library_opengl_default_format.cpp
 HEADERS += $$PWD/sstd_qt_qml_quick_library_opengl_default_format/sstd_qt_qml_quick_library_opengl_default_format.hpp

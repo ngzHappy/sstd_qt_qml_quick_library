@@ -40,6 +40,7 @@ namespace sstd {
 
         StaticGlobal::StaticGlobal() : thisStart{ whenCreate() } {
             QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
+            privateUpdateTheme();
         }
 
         StaticGlobal::~StaticGlobal() {
@@ -56,74 +57,18 @@ namespace sstd {
             return 0;
         }
 
-        namespace dark {
-
-            inline QColor globalGetAccent() {
-                return qRgb(0x0'f4, 0x0'8f, 0x0'b1);
-            }
-
-            inline QColor globalGetBackground() {
-                return qRgb(0x0'30, 0x0'30, 0x0'30);
-            }
-
-            inline QColor globalGetForeground() {
-                return qRgb(0x0'ff, 0x0'ff, 0x0'ff);
-            }
-
-            inline QColor globalGetPrimary() {
-                return qRgb(0x0'9f, 0x0'a8, 0x0'da);
-            }
-
-        }/*namespace drak*/
-
-        namespace light {
-
-            inline QColor globalGetAccent() {
-                return qRgb(0x0'e9, 0x0'1e, 0x0'63);
-            }
-
-            inline QColor globalGetBackground() {
-                return qRgb(0x0'fa, 0x0'fa, 0x0'fa);
-            }
-
-            inline QColor globalGetForeground() {
-                return qRgb(0x0'00, 0x0'00, 0x0'00);
-            }
-
-            inline QColor globalGetPrimary() {
-                return qRgb(0x0'3f, 0x0'51, 0x0'b5);
-            }
-
-        }/*namespace light*/
-
-        int StaticGlobal::getElevation() const {
-            return globalGetElevation();
-        }
-
-        QColor StaticGlobal::getAccent() const {
-            return isDark() ? dark::globalGetAccent() : light::globalGetAccent();
-        }
-
-        QColor StaticGlobal::getBackground() const {
-            return isDark() ? dark::globalGetBackground() : light::globalGetBackground();
-        }
-
-        QColor StaticGlobal::getForeground() const {
-            return isDark() ? dark::globalGetForeground() : light::globalGetForeground();
-        }
-
-        QColor StaticGlobal::getPrimary() const {
-            return isDark() ? dark::globalGetPrimary() : light::globalGetPrimary();
-        }
-
-        bool StaticGlobal::isDark() const {
-            return thisIsDark;
-        }
-
         qlonglong StaticGlobal::timeSinceCreate() const {
             auto const varNow = std::chrono::steady_clock::now();
             return std::chrono::duration_cast<
                 std::chrono::milliseconds>(varNow - thisStart).count();
+        }
+
+        void StaticGlobal::privateUpdateTheme(){
+            if( thisIsDark ){
+                this->setTheme( Dark );
+            }else{
+                this->setTheme( Light );
+            }
         }
 
         void StaticGlobal::setIsDark(bool arg) {
@@ -131,10 +76,7 @@ namespace sstd {
                 return;
             }
             thisIsDark = arg;
-            accentChanged();
-            backgroundChanged();
-            foregroundChanged();
-            primaryChanged();
+            privateUpdateTheme();
             isDarkChanged();
         }
 
