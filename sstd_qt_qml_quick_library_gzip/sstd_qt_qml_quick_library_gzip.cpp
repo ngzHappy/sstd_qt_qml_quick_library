@@ -180,10 +180,12 @@ namespace _gzip {
                         // Try to inflate chunk
                         ret = inflate(&strm, Z_NO_FLUSH);
 
-                        switch (ret) {
-                        case Z_NEED_DICT:
+                        if( ret == Z_NEED_DICT ){
                             ret = Z_DATA_ERROR;
+                        }
+                        switch (ret) {
                         case Z_DATA_ERROR:
+                        case Z_NEED_DICT:
                         case Z_MEM_ERROR:
                         case Z_STREAM_ERROR:
                             // Clean-up
