@@ -3,23 +3,18 @@ import QtQuick.Controls 2.5
 import QtQuick.Controls.Material 2.3
 import sstd.styled.app 1.0
 
-ApplicationWindow {
 
-    id : idThis 
+QtObject{
+
+    function getDefaultIsDark(){
+        return false;
+    }
 
     function reloadDefaultStyle(){
-        GlobalAppData.privateDefaultWindow = idThis;
-        GlobalAppData.reloadDefaultStyle();
+        GlobalAppData.isDark = getDefaultIsDark();
     }
 
 }
-
-
-
-
-
-
-
 
 
 

@@ -69,7 +69,33 @@ namespace sstd {
                 qWarning() << QStringLiteral("do not have main Window ! ");
                 return;
             }
-            QMetaObject::invokeMethod(varWindow,"reloadDefaultStyle");
+            auto varContex = QQmlEngine::contextForObject(varWindow);
+            if (!varContex) {
+                qWarning() << QStringLiteral("contex is null");
+                return;
+            }
+            auto varEngine = varContex->engine();
+            if (!varEngine) {
+                qWarning() << QStringLiteral("engine is null");
+                return;
+            }
+            QQmlComponent varComponent{ varEngine };
+            QDir varDir{ qApp->applicationDirPath() };
+            const auto varFullPath =
+                varDir.absoluteFilePath(QStringLiteral(the_qml/**/ "sstd_qt_qml_quick_library/DefaultStyleConfig.qml"));
+            QFile varFile{ varFullPath };
+            if (!varFile.open(QIODevice::ReadOnly)) {
+                qWarning() << QStringLiteral("can not open : ") << varFullPath;
+                return;
+            }
+            varComponent.setData(varFile.readAll(), {});
+            auto varObject = varComponent.beginCreate(varContex);
+            varComponent.completeCreate();
+            try {
+                QMetaObject::invokeMethod(varObject, "reloadDefaultStyle", Qt::DirectConnection);
+            } catch (...) {
+            }
+            delete varObject;
         }
 
         QVariant StaticGlobal::timeSinceCreate() const {
@@ -129,11 +155,11 @@ function setToLight(){
         }
 
         void StaticGlobal::setPrivateDefaultWindow(QQuickWindow * arg) {
-            if (thisPrivateDefaultWindow.data()==arg) {
+            if (thisPrivateDefaultWindow.data() == arg) {
                 return;
             }
             if (thisPrivateDefaultWindow.data()) {
-                qWarning() << QStringLiteral( "can not set again!!");
+                qWarning() << QStringLiteral("can not set again!!");
                 return;
             }
             thisPrivateDefaultWindow = arg;
