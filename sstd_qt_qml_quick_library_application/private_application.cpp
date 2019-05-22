@@ -75,7 +75,7 @@ namespace sstd {
             if( arg->isWindowType() ){
                 auto varWindow = qobject_cast<QQuickWindow *>(arg);
                 if( varWindow ){
-                    auto varSSTDStyle = varWindow->findChild<QObject*>(QStringLiteral("sstdStyled"));
+                    auto varSSTDStyle = varWindow->findChild<QObject*>(QStringLiteral("sstdStyled"),Qt::FindDirectChildrenOnly);
                     if(!varSSTDStyle){
                         auto varContex = QQmlEngine::contextForObject(varWindow);
                         auto varJSEngine   = varContex->engine();
