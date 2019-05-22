@@ -71,12 +71,59 @@ namespace sstd {
             }
         }
 
+        inline static void setWindowTheme(QObject * arg,bool isDark){
+            if( arg->isWindowType() ){
+                auto varWindow = qobject_cast<QQuickWindow *>(arg);
+                if( varWindow ){
+                    auto varSSTDStyle = varWindow->findChild<QObject*>(QStringLiteral("sstdStyled"));
+                    if(!varSSTDStyle){
+                        auto varContex = QQmlEngine::contextForObject(varWindow);
+                        auto varJSEngine   = varContex->engine();
+                        QQmlComponent varComponent{ varJSEngine , varWindow };
+                        varComponent.setData(QByteArrayLiteral(u8R"___(import QtQuick.Controls.Material 2.12
+                                                               import QtQuick 2.9
+                                                               QtObject {
+                                                               id : idRoot
+                                                               objectName : "sstdStyled";
+                                                               property var theMaterial;
+                                                               function constructThis( window ){
+                                                                   theMaterial = window.Material;
+                                                               }
+                                                               function setToDark(){
+                                                                   theMaterial.theme = theMaterial.Dark;
+                                                               }
+                                                               function setToLight(){
+                                                                   theMaterial.theme = theMaterial.Light;
+                                                               }
+                                                               }
+                                                               )___"),{});
+                        varSSTDStyle = varComponent.beginCreate(varContex);
+                        varSSTDStyle->setParent(varWindow);
+                        varComponent.completeCreate();
+                        QMetaObject::invokeMethod(varSSTDStyle,"constructThis",
+                                                  Q_ARG(QVariant, QVariant::fromValue( varWindow ) ) );
+                    }
+                    if(isDark){
+                        QMetaObject::invokeMethod(varSSTDStyle,"setToDark");
+                    }else{
+                        QMetaObject::invokeMethod(varSSTDStyle,"setToLight");
+                    }
+                }
+            }
+        }
+
         void StaticGlobal::setIsDark(bool arg) {
             if (arg == thisIsDark) {
                 return;
             }
             thisIsDark = arg;
             privateUpdateTheme();
+            {
+                auto varAllWindows = qApp->topLevelWindows();
+                for( auto varI : qAsConst( varAllWindows ) ){
+                    setWindowTheme(varI,arg);
+                }
+            }
             isDarkChanged();
         }
 
