@@ -6,7 +6,10 @@ import "DefaultStyleConfig.js" as DefaultStyleConfig
 
 ApplicationWindow {
 
+    id : idThis 
+
     function reloadDefaultStyle(){
+        GlobalAppData.privateDefaultWindow = idThis;
         DefaultStyleConfig.reloadDefaultStyle();
     }
 

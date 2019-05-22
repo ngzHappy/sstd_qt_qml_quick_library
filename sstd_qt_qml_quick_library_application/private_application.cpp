@@ -6,6 +6,12 @@
 #include "../sstd_qt_qml_quick_library_path/sstd_qt_qml_quick_library_path.hpp"
 #include <cassert>
 
+#if defined(_DEBUG)
+#define the_qml "sstd_app_contex/theqml_the_debug/"
+#else
+#define the_qml "sstd_app_contex/theqml/"
+#endif
+
 inline static void registerThis(QCoreApplication *);
 
 namespace sstd {
@@ -57,30 +63,40 @@ namespace sstd {
             return 0;
         }
 
-        qlonglong StaticGlobal::timeSinceCreate() const {
+        void StaticGlobal::reloadDefaultStyle() {
+            auto varWindow = thisPrivateDefaultWindow.data();
+            if (!varWindow) {
+                qWarning() << QStringLiteral("do not have main Window ! ");
+                return;
+            }
+            QMetaObject::invokeMethod(varWindow,"reloadDefaultStyle");
+        }
+
+        QVariant StaticGlobal::timeSinceCreate() const {
             auto const varNow = std::chrono::steady_clock::now();
             return std::chrono::duration_cast<
                 std::chrono::milliseconds>(varNow - thisStart).count();
         }
 
-        void StaticGlobal::privateUpdateTheme(){
-            if( thisIsDark ){
-                this->setTheme( Dark );
-            }else{
-                this->setTheme( Light );
+        void StaticGlobal::privateUpdateTheme() {
+            if (thisIsDark) {
+                this->setTheme(Dark);
+            } else {
+                this->setTheme(Light);
             }
         }
 
-        inline static void setWindowTheme(QObject * arg,bool isDark){
-            if( arg->isWindowType() ){
+        inline static void setWindowTheme(QObject * arg, bool isDark) {
+            if (arg->isWindowType()) {
                 auto varWindow = qobject_cast<QQuickWindow *>(arg);
-                if( varWindow ){
-                    auto varSSTDStyle = varWindow->findChild<QObject*>(QStringLiteral("sstdStyled"),Qt::FindDirectChildrenOnly);
-                    if(!varSSTDStyle){
+                if (varWindow) {
+                    auto varSSTDStyle = varWindow->findChild<QObject*>(QStringLiteral("sstdStyled"), Qt::FindDirectChildrenOnly);
+                    if (!varSSTDStyle) {
                         auto varContex = QQmlEngine::contextForObject(varWindow);
-                        auto varJSEngine   = varContex->engine();
+                        auto varJSEngine = varContex->engine();
                         QQmlComponent varComponent{ varJSEngine , varWindow };
-                        varComponent.setData(QByteArrayLiteral(u8R"___(import QtQuick.Controls.Material 2.12
+                        varComponent.setData(QByteArrayLiteral(u8R"___(
+import QtQuick.Controls.Material 2.12
 import QtQuick 2.9
 QtObject {
 id : idRoot
@@ -96,20 +112,32 @@ function setToLight(){
     theMaterial.theme = theMaterial.Light;
 }
 }
-)___"),{});
+)___"), {});
                         varSSTDStyle = varComponent.beginCreate(varContex);
                         varSSTDStyle->setParent(varWindow);
                         varComponent.completeCreate();
-                        QMetaObject::invokeMethod(varSSTDStyle,"constructThis",
-                                                  Q_ARG(QVariant, QVariant::fromValue( varWindow ) ) );
+                        QMetaObject::invokeMethod(varSSTDStyle, "constructThis",
+                            Q_ARG(QVariant, QVariant::fromValue(varWindow)));
                     }
-                    if(isDark){
-                        QMetaObject::invokeMethod(varSSTDStyle,"setToDark");
-                    }else{
-                        QMetaObject::invokeMethod(varSSTDStyle,"setToLight");
+                    if (isDark) {
+                        QMetaObject::invokeMethod(varSSTDStyle, "setToDark");
+                    } else {
+                        QMetaObject::invokeMethod(varSSTDStyle, "setToLight");
                     }
                 }
             }
+        }
+
+        void StaticGlobal::setPrivateDefaultWindow(QQuickWindow * arg) {
+            if (thisPrivateDefaultWindow.data()==arg) {
+                return;
+            }
+            if (thisPrivateDefaultWindow.data()) {
+                qWarning() << QStringLiteral( "can not set again!!");
+                return;
+            }
+            thisPrivateDefaultWindow = arg;
+            privateDefaultWindowChanged();
         }
 
         void StaticGlobal::setIsDark(bool arg) {
@@ -120,8 +148,8 @@ function setToLight(){
             privateUpdateTheme();
             {
                 auto varAllWindows = qApp->topLevelWindows();
-                for( auto varI : qAsConst( varAllWindows ) ){
-                    setWindowTheme(varI,arg);
+                for (auto varI : qAsConst(varAllWindows)) {
+                    setWindowTheme(varI, arg);
                 }
             }
             isDarkChanged();
@@ -138,11 +166,6 @@ function setToLight(){
 /* import sstd.styled.app 1.0 //GlobalAppData */
 inline static void registerThis(QCoreApplication *arg) {
     const auto varDirPath = arg->applicationDirPath();
-#if defined(_DEBUG)
-#define the_qml "sstd_app_contex/theqml_the_debug/"
-#else
-#define the_qml "sstd_app_contex/theqml/"
-#endif
     constexpr const char * globalURI = "sstd.styled.app";
     qmlRegisterType(sstd::getLocalFileFullPath(
         QStringLiteral(the_qml/**/"sstd_qt_qml_quick_library/StyledApplicationWindow.qml"),
