@@ -80,15 +80,20 @@ namespace sstd {
                 return;
             }
             QQmlComponent varComponent{ varEngine };
-            QDir varDir{ qApp->applicationDirPath() };
+            const auto varDirPath = qApp->applicationDirPath();
+            QDir varDir{ varDirPath };
+#define DefaultStyleConfig "sstd_qt_qml_quick_library/DefaultStyleConfig.qml"
             const auto varFullPath =
-                varDir.absoluteFilePath(QStringLiteral(the_qml/**/ "sstd_qt_qml_quick_library/DefaultStyleConfig.qml"));
+                varDir.absoluteFilePath(QStringLiteral(the_qml/**/DefaultStyleConfig));
             QFile varFile{ varFullPath };
             if (!varFile.open(QIODevice::ReadOnly)) {
                 qWarning() << QStringLiteral("can not open : ") << varFullPath;
                 return;
             }
-            varComponent.setData(varFile.readAll(), {});
+            const auto varUrl = sstd::getLocalFileFullPath(
+                QStringLiteral(the_qml/**/DefaultStyleConfig),
+                varDirPath);
+            varComponent.setData(varFile.readAll(), varUrl);
             auto varObject = varComponent.beginCreate(varContex);
             varComponent.completeCreate();
             try {
