@@ -81,22 +81,22 @@ namespace sstd {
                         auto varJSEngine   = varContex->engine();
                         QQmlComponent varComponent{ varJSEngine , varWindow };
                         varComponent.setData(QByteArrayLiteral(u8R"___(import QtQuick.Controls.Material 2.12
-                                                               import QtQuick 2.9
-                                                               QtObject {
-                                                               id : idRoot
-                                                               objectName : "sstdStyled";
-                                                               property var theMaterial;
-                                                               function constructThis( window ){
-                                                                   theMaterial = window.Material;
-                                                               }
-                                                               function setToDark(){
-                                                                   theMaterial.theme = theMaterial.Dark;
-                                                               }
-                                                               function setToLight(){
-                                                                   theMaterial.theme = theMaterial.Light;
-                                                               }
-                                                               }
-                                                               )___"),{});
+import QtQuick 2.9
+QtObject {
+id : idRoot
+objectName : "sstdStyled";
+property var theMaterial;/*chane here if you changed styled!!!*/
+function constructThis( window ){
+    theMaterial = window.Material;
+}
+function setToDark(){
+    theMaterial.theme = theMaterial.Dark;
+}
+function setToLight(){
+    theMaterial.theme = theMaterial.Light;
+}
+}
+)___"),{});
                         varSSTDStyle = varComponent.beginCreate(varContex);
                         varSSTDStyle->setParent(varWindow);
                         varComponent.completeCreate();
