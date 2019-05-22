@@ -5,6 +5,7 @@ import sstd.styled.app 1.0
 
 ApplicationWindow {
 
+    property bool defaultIsDark : false ;
 
 }
 
