@@ -5,7 +5,7 @@ import sstd.styled.app 1.0
 
 ApplicationWindow {
 
-    id : idThis 
+    id : idThis
 
     /* ------------------------------- */
     function reloadDefaultStyle(){
@@ -14,21 +14,17 @@ ApplicationWindow {
     }
 
     /* ------------------------------- */
+    function runOnceOnStart(){
+        idThis.visible = true;
+    }
+
+    /* ------------------------------- */
     Component.onCompleted: {
         /*begin:debug*/
         console.log("Debug : Main Application Window Load !!!");
         /*end:debug*/
         idThis.reloadDefaultStyle();
+        Qt.callLater(runOnceOnStart);
     }
 
 }
-
-
-
-
-
-
-
-
-
-
