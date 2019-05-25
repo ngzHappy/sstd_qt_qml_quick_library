@@ -13,6 +13,11 @@ ApplicationWindow {
         GlobalAppData.reloadDefaultStyle();
     }
 
+    /* ------------------------------- */
+    Component.onCompleted: {
+        /*begin:debug*/
+        console.log("Debug : Main Application Window Load !!!");
+        /*end:debug*/
         idThis.reloadDefaultStyle();
     }
 
