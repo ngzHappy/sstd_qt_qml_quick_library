@@ -7,9 +7,13 @@ ApplicationWindow {
 
     id : idThis 
 
+    /* ------------------------------- */
     function reloadDefaultStyle(){
         GlobalAppData.privateDefaultWindow = idThis;
         GlobalAppData.reloadDefaultStyle();
+    }
+
+        idThis.reloadDefaultStyle();
     }
 
 }
