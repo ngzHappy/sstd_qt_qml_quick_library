@@ -202,6 +202,10 @@ inline static void registerThis(QCoreApplication *arg) {
         QStringLiteral(the_qml/**/"sstd_qt_qml_quick_library/StyledApplicationWindow.qml"),
         varDirPath),
         globalURI, 1, 0, "StyledApplicationWindow");
+    qmlRegisterType(sstd::getLocalFileFullPath(
+        QStringLiteral(the_qml/**/"sstd_qt_qml_quick_library/StyledWindow.qml"),
+        varDirPath),
+        globalURI, 1, 0, "StyledWindow");
     qmlRegisterSingletonType< sstd::global::StaticGlobal >(globalURI, 1, 0, "GlobalAppData",
         [](QQmlEngine *, QJSEngine *)->QObject * {
 #if defined(_DEBUG)
