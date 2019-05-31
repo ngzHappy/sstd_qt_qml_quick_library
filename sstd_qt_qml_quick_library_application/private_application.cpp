@@ -7,9 +7,9 @@
 #include <cassert>
 
 #if defined(_DEBUG)
-#define the_qml "sstd_app_contex/theqml_the_debug/"
+#define the_qml "theqml_the_debug/"
 #else
-#define the_qml "sstd_app_contex/theqml/"
+#define the_qml "theqml/"
 #endif
 
 inline static void registerThis(QCoreApplication *);
@@ -82,7 +82,7 @@ namespace sstd {
             QQmlComponent varComponent{ varEngine };
             const auto varDirPath = qApp->applicationDirPath();
             QDir varDir{ varDirPath };
-#define DefaultStyleConfig "sstd_qt_qml_quick_library/DefaultStyleConfig.qml"
+#define DefaultStyleConfig "sstd/styled/app/DefaultStyleConfig.qml"
             const auto varFullPath =
                 varDir.absoluteFilePath(QStringLiteral(the_qml/**/DefaultStyleConfig));
             QFile varFile{ varFullPath };
@@ -205,10 +205,14 @@ function setToLight(){
     }
 }
 
-/* import sstd.styled.app 1.0 //GlobalAppData */
+/* import theqml_the_debug.sstd.styled.app 1.0 //GlobalAppData */
 inline static void registerThis(QCoreApplication *arg) {
     const auto varDirPath = arg->applicationDirPath();
-    constexpr const char * globalURI = "sstd.styled.app";
+#if defined(_DEBUG)
+    constexpr const char * globalURI = "theqml_the_debug.sstd.styled.app";
+#else
+    constexpr const char * globalURI = "theqml.sstd.styled.app";
+#endif
     /* register singleton */
     qmlRegisterSingletonType< sstd::global::StaticGlobal >(globalURI, 1, 0,
         "GlobalAppData",
