@@ -164,7 +164,6 @@ function setToLight(){
                 return;
             }
             if (thisPrivateDefaultWindow.data()) {
-                qWarning() << QStringLiteral("can not set again!!");
                 return;
             }
             thisPrivateDefaultWindow = arg;
