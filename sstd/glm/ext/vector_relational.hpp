@@ -1,4 +1,4 @@
-/// @ref ext_vector_relational
+﻿/// @ref ext_vector_relational
 /// @file glm/ext/vector_relational.hpp
 ///
 /// @defgroup ext_vector_relational GLM_EXT_vector_relational

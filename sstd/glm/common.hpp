@@ -1,4 +1,4 @@
-/// @ref core
+﻿/// @ref core
 /// @file glm/common.hpp
 ///
 /// @see <a href="http://www.opengl.org/registry/doc/GLSLangSpec.4.20.8.pdf">GLSL 4.20.8 specification, section 8.3 Common Functions</a>
@@ -536,4 +536,3 @@ namespace glm
 }//namespace glm
 
 #include "detail/func_common.inl"
-

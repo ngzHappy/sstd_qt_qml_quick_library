@@ -1,4 +1,4 @@
-/// @ref ext_quaternion_double_precision
+﻿/// @ref ext_quaternion_double_precision
 /// @file glm/ext/quaternion_double_precision.hpp
 ///
 /// @defgroup ext_quaternion_double_precision GLM_EXT_quaternion_double_precision
@@ -39,4 +39,3 @@ namespace glm
 
 	/// @}
 } //namespace glm
-

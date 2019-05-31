@@ -1,4 +1,4 @@
-namespace sstd {
+﻿namespace sstd {
 
     namespace _private_sstd_checked_load_qml_file {
 
@@ -49,4 +49,3 @@ namespace sstd {
     }
 
 }/*namespace sstd*/
-

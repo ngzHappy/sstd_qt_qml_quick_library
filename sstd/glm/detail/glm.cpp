@@ -1,4 +1,4 @@
-/// @ref core
+﻿/// @ref core
 /// @file glm/glm.cpp
 
 #ifndef GLM_ENABLE_EXPERIMENTAL
@@ -260,4 +260,3 @@ template struct tdualquat<float32, highp>;
 template struct tdualquat<float64, highp>;
 
 }//namespace glm
-

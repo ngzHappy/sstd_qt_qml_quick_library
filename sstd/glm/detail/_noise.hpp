@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "../common.hpp"
 
@@ -78,4 +78,3 @@ namespace detail
 	}
 }//namespace detail
 }//namespace glm
-

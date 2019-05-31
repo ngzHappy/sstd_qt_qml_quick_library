@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "detail/qualifier.hpp"
 
@@ -814,5 +814,3 @@ namespace glm
 	typedef qua<f64, highp>				highp_f64quat;
 	typedef qua<f64, defaultp>			f64quat;
 }//namespace glm
-
-

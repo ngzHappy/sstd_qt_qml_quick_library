@@ -1,4 +1,4 @@
-/// @ref gtc_vec1
+﻿/// @ref gtc_vec1
 /// @file glm/gtc/vec1.hpp
 ///
 /// @see core (dependence)
@@ -27,4 +27,3 @@
 #if GLM_MESSAGES == GLM_ENABLE && !defined(GLM_EXT_INCLUDED)
 #	pragma message("GLM: GLM_GTC_vec1 extension included")
 #endif
-

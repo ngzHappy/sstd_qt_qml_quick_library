@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #define GLM_SWIZZLE_GEN_VEC2_ENTRY(T, P, CONST, A, B)	\
 	vec<2, T, Q> A ## B() CONST							\
@@ -679,4 +679,3 @@
 	GLM_SWIZZLE_GEN_VEC_FROM_VEC4_COMP(T, P, x, y, z, w) \
 	GLM_SWIZZLE_GEN_VEC_FROM_VEC4_COMP(T, P, r, g, b, a) \
 	GLM_SWIZZLE_GEN_VEC_FROM_VEC4_COMP(T, P, s, t, p, q)
-

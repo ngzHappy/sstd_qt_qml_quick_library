@@ -210,4 +210,3 @@ inline static void registerThis(QCoreApplication *arg) {
         return sstd::global::instanceStaticGlobal();
     });
 }
-

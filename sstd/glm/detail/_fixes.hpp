@@ -1,4 +1,4 @@
-#include <cmath>
+﻿#include <cmath>
 
 //! Workaround for compatibility with other libraries
 #ifdef max
@@ -24,4 +24,3 @@
 #ifdef log2
 #undef log2
 #endif
-

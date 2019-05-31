@@ -1,4 +1,4 @@
-/// @ref gtx_texture
+﻿/// @ref gtx_texture
 /// @file glm/gtx/texture.hpp
 ///
 /// @see core (dependence)
@@ -43,4 +43,3 @@ namespace glm
 }// namespace glm
 
 #include "texture.inl"
-

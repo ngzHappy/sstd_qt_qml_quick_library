@@ -98,4 +98,3 @@ CONFIG(debug,debug|release) {
     QMAKE_POST_LINK += $$escape_expand(\\n\\t)$${SSTD_LIBRARY_OUTPUT_PATH}/sstd_copy_qml $${PWD}/theqml_the_debug $${SSTD_LIBRARY_OUTPUT_PATH}/sstd_app_contex/theqml release
 }
 export(QMAKE_POST_LINK)
-

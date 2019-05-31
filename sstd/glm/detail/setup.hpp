@@ -1,4 +1,4 @@
-#ifndef GLM_SETUP_INCLUDED
+﻿#ifndef GLM_SETUP_INCLUDED
 
 #include <cassert>
 #include <cstddef>
@@ -297,7 +297,7 @@
 #if GLM_HAS_CONSTEXPR
 # if (GLM_COMPILER & GLM_COMPILER_CLANG)
 #	define GLM_HAS_IF_CONSTEXPR __has_feature(cxx_if_constexpr)
-# elif (GLM_COMPILER & GLM_COMPILER_GCC) 
+# elif (GLM_COMPILER & GLM_COMPILER_GCC)
 #	define GLM_HAS_IF_CONSTEXPR GLM_COMPILER >= GLM_COMPILER_GCC7
 # elif (GLM_LANG & GLM_LANG_CXX17_FLAG)
 # 	define GLM_HAS_IF_CONSTEXPR 1
