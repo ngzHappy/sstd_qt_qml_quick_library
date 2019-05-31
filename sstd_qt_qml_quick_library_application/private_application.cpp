@@ -224,4 +224,5 @@ inline static void registerThis(QCoreApplication *arg) {
 #endif
         return sstd::global::instanceStaticGlobal();
     });
+    qmlProtectModule("sstd.styled.app",1);
 }
