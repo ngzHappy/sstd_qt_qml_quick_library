@@ -1,0 +1,5 @@
+module theqml_the_debug.sstd.styled.app
+
+DefaultStyleConfig 1.0 DefaultStyleConfig.qml
+StyledApplicationWindow 1.0 StyledApplicationWindow.qml
+StyledWindow 1.0 StyledWindow.qml
