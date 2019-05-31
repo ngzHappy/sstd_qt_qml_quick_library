@@ -33,6 +33,8 @@ namespace sstd {
             inline bool isDark() const;
             inline QQuickWindow * getPrivateDefaultWindow() const;
         public:
+            Q_INVOKABLE QString readLocalFile(const QUrl & argLocalUrl);
+        public:
             Q_SLOT QVariant timeSinceCreate() const;
             Q_SLOT void reloadDefaultStyle();
         private:

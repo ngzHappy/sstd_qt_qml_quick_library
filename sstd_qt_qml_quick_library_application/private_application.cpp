@@ -117,6 +117,17 @@ namespace sstd {
             }
         }
 
+        QString StaticGlobal::readLocalFile(const QUrl & arg) {
+            QFile varFile{ arg.toLocalFile() };
+            if (!varFile.open(QIODevice::ReadOnly)) {
+                qWarning() << QStringLiteral("can not open : ") << arg;
+                return {};
+            }
+            QTextStream varReadStream{ &varFile };
+            varReadStream.setCodec(QTextCodec::codecForName("UTF-8"));
+            return varReadStream.readAll();
+        }
+
         inline static void setWindowTheme(QObject * arg, bool isDark) {
             if (arg->isWindowType()) {
                 auto varWindow = qobject_cast<QQuickWindow *>(arg);
