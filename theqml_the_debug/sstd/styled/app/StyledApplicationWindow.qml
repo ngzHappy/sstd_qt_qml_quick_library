@@ -6,7 +6,7 @@ import QtQuick.Controls.Material 2.3
 import theqml_the_debug.sstd.styled.app 1.0
 /*end:import*/
 
-ApplicationWindow {
+StyledWindow {
 
     id : idThis
 
