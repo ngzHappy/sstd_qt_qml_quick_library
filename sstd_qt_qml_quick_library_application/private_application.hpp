@@ -38,7 +38,7 @@ namespace sstd {
             Q_SLOT QVariant timeSinceCreate() const;
             Q_SLOT void reloadDefaultStyle();
         private:
-            bool thisIsDark{ false };
+            bool thisIsDark{ true };
             std::chrono::steady_clock::time_point const thisStart;
             QPointer< QQuickWindow > thisPrivateDefaultWindow;
         private:
