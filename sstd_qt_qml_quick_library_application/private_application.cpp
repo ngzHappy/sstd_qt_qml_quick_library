@@ -105,8 +105,8 @@ namespace sstd {
 
         QVariant StaticGlobal::timeSinceCreate() const {
             auto const varNow = std::chrono::steady_clock::now();
-            return std::chrono::duration_cast<
-                std::chrono::milliseconds>(varNow - thisStart).count();
+            return static_cast<qlonglong>( std::chrono::duration_cast<
+                std::chrono::milliseconds>(varNow - thisStart).count() );
         }
 
         void StaticGlobal::privateUpdateTheme() {
