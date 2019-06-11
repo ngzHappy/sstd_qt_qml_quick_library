@@ -61,6 +61,11 @@ namespace sstd {
         Q_OBJECT
     public:
         QtStyledApplication(int & argc,char ** argv);
+        int exec();
+    public:
+        QQmlApplicationEngine * getStyledApplicatoinEngine() const;
+    private:
+        QQmlApplicationEngine * thisAppEngine{nullptr};
     private:
         sstd_class(QtStyledApplication);
     };

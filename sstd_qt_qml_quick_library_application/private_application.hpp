@@ -6,6 +6,7 @@
 #include <QtGui/qcolor.h>
 #include <QtQuick/qquickwindow.h>
 #include <QtCore/qpointer.h>
+#include <QtQml/qqmlapplicationengine.h>
 #include <chrono>
 #include "sstd_qquickmaterialstyle_p.h"
 
@@ -55,6 +56,16 @@ namespace sstd {
             return thisPrivateDefaultWindow.data();
         }
 
-
     }/*namespace global*/
+
+    class StyledQQmlApplicationEngine : public QQmlApplicationEngine {
+        Q_OBJECT
+    private:
+        using Super = QQmlApplicationEngine;
+    public:
+        StyledQQmlApplicationEngine(QCoreApplication *);
+    private:
+        sstd_class(StyledQQmlApplicationEngine);
+    };
+
 }/*namespace sstd*/

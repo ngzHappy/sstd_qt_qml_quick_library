@@ -27,14 +27,16 @@ namespace sstd {
 #endif
     }/* namespace global */
 
-    QtStyledApplication::QtStyledApplication(int & argc, char ** argv) :
-        QtApplication(argc, argv) {
-        QQuickStyle::setStyle(global::fallBackStyle());
-        QQuickStyle::setFallbackStyle(global::fallBackStyle());
-#if defined(_DEBUG)
-        global::isQtStyledApplication = true;
-#endif
-        registerThis(this);
+    int QtStyledApplication::exec() {
+        return QtApplication::exec();
+    }
+
+    StyledQQmlApplicationEngine::StyledQQmlApplicationEngine(QCoreApplication *arg)
+        :Super(arg) {
+    }
+
+    QQmlApplicationEngine * QtStyledApplication::getStyledApplicatoinEngine() const {
+        return thisAppEngine;
     }
 
     namespace global {
@@ -105,8 +107,8 @@ namespace sstd {
 
         QVariant StaticGlobal::timeSinceCreate() const {
             auto const varNow = std::chrono::steady_clock::now();
-            return static_cast<qlonglong>( std::chrono::duration_cast<
-                std::chrono::milliseconds>(varNow - thisStart).count() );
+            return static_cast<qlonglong>(std::chrono::duration_cast<
+                std::chrono::milliseconds>(varNow - thisStart).count());
         }
 
         void StaticGlobal::privateUpdateTheme() {
@@ -202,7 +204,28 @@ function setToLight(){
             return globalAns;
         }
 
+    }/*global*/
+
+    QtStyledApplication::QtStyledApplication(int & argc, char ** argv) :
+        QtApplication(argc, argv) {
+        QQuickStyle::setStyle(global::fallBackStyle());
+        QQuickStyle::setFallbackStyle(global::fallBackStyle());
+#if defined(_DEBUG)
+        global::isQtStyledApplication = true;
+#endif
+        registerThis(this);
+        /************************************/
+        thisAppEngine = sstd_new<StyledQQmlApplicationEngine>(this);
+        connect(thisAppEngine, &QQmlApplicationEngine::objectCreated,
+            global::instanceStaticGlobal(), [](auto obj, const auto &) {
+            auto varGlobal = global::instanceStaticGlobal();
+            if (!varGlobal->getPrivateDefaultWindow()) {
+                return;
+            }
+            global::setWindowTheme(obj, varGlobal->isDark());
+        });
     }
+
 }
 
 /* import theqml_the_debug.sstd.styled.app 1.0 //GlobalAppData */
