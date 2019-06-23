@@ -9,6 +9,7 @@
 #include <QtQml/qqmlapplicationengine.h>
 #include <chrono>
 #include "sstd_qquickmaterialstyle_p.h"
+class QCoreApplication;
 
 namespace sstd {
     namespace global {
