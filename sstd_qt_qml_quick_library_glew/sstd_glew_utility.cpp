@@ -8,9 +8,16 @@
 #include <array>
 #include <string_view>
 using namespace std::string_view_literals;
+#include <QtCore/qdebug.h>
 
 namespace sstd::opengl_utility {
 
+    inline constexpr void checkQImageFormat() {
+        static_assert ((defaultQImageFormat() == QImage::Format_RGBA8888) ||
+            (defaultQImageFormat() == QImage::Format_RGBA64));
+    }
+
+    /*获得texture的size*/
     SSTD_QT_SYMBOL_DECL QSize getTextureSize(GLuint arg) {
 
         if (arg < 1) {
@@ -26,10 +33,11 @@ namespace sstd::opengl_utility {
 
     }
 
+    /*创建新的texture*/
     SSTD_QT_SYMBOL_DECL GLuint createTexture(QImage arg) {
 
         const auto varImage =
-            arg.convertToFormat(QImage::Format_RGBA64);
+            arg.convertToFormat(defaultQImageFormat());
 
         if (varImage.isNull()) {
             return 0;
@@ -43,14 +51,27 @@ namespace sstd::opengl_utility {
             return 0;
         }
 
-        glTextureStorage2D(varAns, 1, GL_RGBA16,
-            varImage.width(), varImage.height());
+        if constexpr (defaultQImageFormat() == QImage::Format_RGBA64) {
+            glTextureStorage2D(varAns, 1, GL_RGBA16,
+                varImage.width(), varImage.height());
 
-        glTextureSubImage2D(varAns, 0,
-            0, 0,
-            varImage.width(), varImage.height(),
-            GL_RGBA, GL_UNSIGNED_SHORT,
-            varImage.constBits());
+            glTextureSubImage2D(varAns, 0,
+                0, 0,
+                varImage.width(), varImage.height(),
+                GL_RGBA, GL_UNSIGNED_SHORT,
+                varImage.constBits());
+        } else if constexpr (defaultQImageFormat() == QImage::Format_RGBA8888) {
+            glTextureStorage2D(varAns, 1, GL_RGBA8,
+                varImage.width(), varImage.height());
+
+            glTextureSubImage2D(varAns, 0,
+                0, 0,
+                varImage.width(), varImage.height(),
+                GL_RGBA, GL_UNSIGNED_BYTE,
+                varImage.constBits());
+        } else {
+            checkQImageFormat();
+        }
 
         glTextureParameteri(varAns, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glTextureParameteri(varAns, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -58,11 +79,13 @@ namespace sstd::opengl_utility {
         return varAns;
     }
 
+    /*更新一个texture*/
     SSTD_QT_SYMBOL_DECL void updateTexture(GLuint * argTextureID, QImage argImage) {
 
         assert(argTextureID);
 
         if (*argTextureID < 1) {
+            /*创建一个新的texture...*/
             *argTextureID = createTexture(argImage);
             return;
         }
@@ -71,19 +94,31 @@ namespace sstd::opengl_utility {
         auto varTextureSize = getTextureSize(*argTextureID);
 
         if (varImageSize != varTextureSize) {
+            /*如果texture大小改变，删除旧的texture并创建新的*/
             glDeleteTextures(1, argTextureID);
             *argTextureID = createTexture(argImage);
             return;
         }
 
+        /*更新已经存在的texture*/
         const auto varImage =
-            argImage.convertToFormat(QImage::Format_RGBA64);
+            argImage.convertToFormat(defaultQImageFormat());
 
-        glTextureSubImage2D(*argTextureID, 0,
-            0, 0,
-            varImage.width(), varImage.height(),
-            GL_RGBA, GL_UNSIGNED_SHORT,
-            varImage.constBits());
+        if constexpr (defaultQImageFormat() == QImage::Format_RGBA64) {
+            glTextureSubImage2D(*argTextureID, 0,
+                0, 0,
+                varImage.width(), varImage.height(),
+                GL_RGBA, GL_UNSIGNED_SHORT,
+                varImage.constBits());
+        } else if constexpr (defaultQImageFormat() == QImage::Format_RGBA8888) {
+            glTextureSubImage2D(*argTextureID, 0,
+                0, 0,
+                varImage.width(), varImage.height(),
+                GL_RGBA, GL_UNSIGNED_BYTE,
+                varImage.constBits());
+        } else {
+            checkQImageFormat();
+        }
 
     }
 
@@ -164,7 +199,7 @@ namespace sstd::opengl_utility {
                     infos_.resize(log_length, char(0));
                     char * info = infos_.data();
                     glGetShaderInfoLog(shaders.data[varJ], log_length, nullptr, info);
-                    qWarning(info);
+                    qWarning() << QString::fromUtf8(info);
                     return 0;
                 }
             }
@@ -194,7 +229,7 @@ namespace sstd::opengl_utility {
                 infos_.resize(log_length, char(0));
                 char * info = infos_.data();
                 glGetProgramInfoLog(program, log_length, nullptr, info);
-                qWarning(info);
+                qWarning() << QString::fromUtf8(info);
                 glDeleteProgram(program);
                 return 0;
             }

@@ -11,6 +11,10 @@
 
 namespace sstd::opengl_utility {
 
+    inline static constexpr auto defaultQImageFormat(){
+        return QImage::Format_RGBA64;
+    }
+
     SSTD_QT_SYMBOL_DECL GLuint createTexture(QImage);
     SSTD_QT_SYMBOL_DECL QSize getTextureSize(GLuint);
     SSTD_QT_SYMBOL_DECL void updateTexture(GLuint *, QImage);

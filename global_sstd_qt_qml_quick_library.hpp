@@ -8,7 +8,6 @@
 #define SSTD_QT_SYMBOL_DECL SSTD_SYMBOL_IMPORT
 #endif
 
-
 namespace sstd {
 
     class DeleteLater{
