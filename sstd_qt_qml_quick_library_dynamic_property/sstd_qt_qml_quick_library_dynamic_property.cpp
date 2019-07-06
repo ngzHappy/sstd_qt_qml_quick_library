@@ -85,13 +85,13 @@ namespace sstd{
         return varPos!=thisMap.end();
     }
 
-    std::shared_ptr<QObjectUserData> DynamicPropertyMap::get(const DynamicPropertyMapKey & arg) const{
+    DynamicPropertyMap::ThisQObjectUserDataPointer DynamicPropertyMap::get(const DynamicPropertyMapKey & arg) const{
         std::shared_lock varRead{ thisMutex };
         auto varPos = thisMap.find(arg);
         if(varPos == thisMap.end()){
             return {};
         }
-        return varPos->second;
+        return varPos->second.get();
     }
 
     void DynamicPropertyMap::erase(const DynamicPropertyMapKey & arg){
@@ -99,9 +99,17 @@ namespace sstd{
         thisMap.erase(arg);
     }
 
-    void DynamicPropertyMap::put(const DynamicPropertyMapKey & arg,std::shared_ptr<QObjectUserData> argV){
+    void DynamicPropertyMap::put(const DynamicPropertyMapKey & arg, ThisQObjectUserDataPointer argV){
         std::unique_lock varWrite{ thisMutex };
-        thisMap[arg]=std::move(argV);
+        thisMap[arg]=OwnThisQObjectUserDataPointer(argV);
+    }
+
+    DynamicPropertyMap::DynamicPropertyMap(){
+    }
+
+    DynamicPropertyMap::~DynamicPropertyMap(){
+        std::unique_lock varWrite{ thisMutex };
+        thisMap.clear();
     }
 
 }/*namespce sstd*/

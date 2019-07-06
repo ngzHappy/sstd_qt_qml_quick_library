@@ -15,6 +15,7 @@ namespace sstd{
         SSTD_QT_SYMBOL_DECL uint object_id();
         enum class KnowDynamicPropertyMapKey : std::uint32_t {
             QThreadDataKey,
+            QThreadOwnKey,
         };
     }/*\uacae_dynamic_property_detail*/
 #endif
@@ -49,22 +50,50 @@ namespace sstd{
 
     class SSTD_QT_SYMBOL_DECL DynamicPropertyMap final :
             public QObjectUserData {
+        using ThisQObjectUserDataPointer = QObjectUserData *;
+        using OwnThisQObjectUserDataPointer = std::unique_ptr<QObjectUserData>;
     public:
         bool has(const DynamicPropertyMapKey &) const;
         void erase(const DynamicPropertyMapKey &);
-        std::shared_ptr<QObjectUserData> get(const DynamicPropertyMapKey &) const;
-        void put(const DynamicPropertyMapKey &,std::shared_ptr<QObjectUserData>);
+        ThisQObjectUserDataPointer get(const DynamicPropertyMapKey &) const;
+        void put(const DynamicPropertyMapKey &,ThisQObjectUserDataPointer);
+        template<typename T,typename ... Args >
+        inline std::pair<T *,bool> construct(const DynamicPropertyMapKey &,Args && ...);
+        DynamicPropertyMap();
+        ~DynamicPropertyMap();
     private:
         friend DynamicPropertyMap * getDynamicPropertyMap(QObject *);
         mutable std::shared_mutex thisMutex;
         using Map = std::map< DynamicPropertyMapKey,
-        std::shared_ptr<QObjectUserData>,
+        OwnThisQObjectUserDataPointer,
         std::less<>,
-        sstd::allocator< std::pair<const DynamicPropertyMapKey,std::shared_ptr<QObjectUserData> > > >;
+        sstd::allocator< std::pair<const DynamicPropertyMapKey,OwnThisQObjectUserDataPointer > > >;
         Map thisMap;
     private:
         sstd_class(DynamicPropertyMap);
     };
+
+    template<typename T,typename ... Args>
+    inline std::pair<T *,bool> DynamicPropertyMap::construct(
+            const DynamicPropertyMapKey & arg,Args && ...args){
+        {
+            std::shared_lock varRead{ thisMutex };
+            auto varPos = thisMap.find(arg);
+            if(varPos!=thisMap.end()){
+                return {static_cast<T *>( varPos->second.get() ),false};
+            }
+        }
+        std::unique_lock varWrite{ thisMutex };
+        {
+            auto varPos = thisMap.find(arg);
+            if(varPos!=thisMap.end()){
+                return {static_cast<T *>( varPos->second.get() ),false};
+            }
+        }
+        auto varAns = sstd_new<T>(std::forward<Args>(args)...);
+        thisMap[arg]=OwnThisQObjectUserDataPointer(varAns);
+        return {varAns,true};
+    }
 
 }/*namespace sstd*/
 

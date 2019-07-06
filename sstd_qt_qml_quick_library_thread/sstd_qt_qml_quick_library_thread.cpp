@@ -1,4 +1,5 @@
 ﻿#include "sstd_qt_qml_quick_library_thread.hpp"
+#include "../sstd_qt_qml_quick_library_dynamic_property/sstd_qt_qml_quick_library_dynamic_property.hpp"
 
 #include <private/qobject_p.h>
 #include <private/qthread_p.h>
@@ -17,8 +18,6 @@ namespace sstd {
 namespace _theSSTDLibraryMemoryFile {
 
     using Mutex = sstd::ThreadObject::Mutex;
-    inline uint threadObjectID();
-    inline Mutex & getThreadObjectMutex(QThread *);
 
 }/*namespace _theSSTDLibraryMemoryFile*/
 
@@ -98,10 +97,6 @@ namespace sstd {
         }
     }
 
-    ThreadObject::Mutex & ThreadObject::getThreadObjectMutex(QThread* arg) {
-        return _theSSTDLibraryMemoryFile::getThreadObjectMutex(arg);
-    }
-
     ThreadObject::ThreadObject() {
     }
 
@@ -118,35 +113,15 @@ namespace sstd {
             return nullptr;
         }
 
-        union {
-            QObjectUserData * varAns;
-            ThreadObject * varAnsObject;
-        };
-
-        auto & varMutex = _theSSTDLibraryMemoryFile::getThreadObjectMutex(arg);
-        const auto varID = _theSSTDLibraryMemoryFile::threadObjectID();
-
-        {
-            std::shared_lock varReadLock{ varMutex };
-            varAns = arg->userData(varID);
-        }
-
-        if (varAns) {
-            return static_cast<ThreadObject *>(varAns);
-        }
-
-        {
-            std::unique_lock varWriteLock{ varMutex };
-            varAns = arg->userData(varID);
-            if (varAns) {
-                return static_cast<ThreadObject *>(varAns);
-            }
-            varAnsObject = sstd_new<ThreadObject>();
-            varAnsObject->moveToThread(arg);
-            arg->setUserData(varID, varAnsObject);
-        }
-
-        return varAnsObject;
+#ifndef Q_MOC_RUN
+        using T = sstd::\uacae_dynamic_property_detail::KnowDynamicPropertyMapKey;
+#endif
+        auto varMap = sstd::getDynamicPropertyMap(arg);
+        auto varAns = varMap->construct<ThreadObject>(T::QThreadDataKey);
+       if(varAns.second) {
+           varAns.first->moveToThread(arg);
+       }
+       return varAns.first;
 
     }
 
@@ -183,8 +158,6 @@ namespace sstd {
         class QObjectOwnQThread : public QObjectUserData {
             std::set< QThread *, std::less<>, sstd::allocator< QThread * > > thisData;
         public:
-            static inline uint getID();
-        public:
 
             inline void insert(QThread * arg) {
                 if (thisData.count(arg) > 0) {
@@ -215,12 +188,6 @@ namespace sstd {
             sstd_class(QObjectOwnQThread);
         };
 
-        inline uint QObjectOwnQThread::getID() {
-            static const uint varAns =
-                QObject::registerUserData();
-            return varAns;
-        }
-
     }
 
     SSTD_QT_SYMBOL_DECL void qobjectOwnQThread(QObject * argO, QThread * argT, bool argAdd) {
@@ -235,18 +202,17 @@ namespace sstd {
 
         assert(dynamic_cast<QThread *>(argO) == nullptr);
 
-        auto varUserData =
-            argO->userData(QObjectOwnQThread::getID());
+#ifndef Q_MOC_RUN
+        using T = sstd::\uacae_dynamic_property_detail::KnowDynamicPropertyMapKey;
+#endif
 
-        if (varUserData == nullptr) {
-            varUserData = sstd_new<QObjectOwnQThread>();
-            argO->setUserData(QObjectOwnQThread::getID(), varUserData);
-        }
+        auto varMap = sstd::getDynamicPropertyMap(argO);
+        auto varUserData = varMap->construct<QObjectOwnQThread>(T::QThreadOwnKey);
 
         if (argAdd) {
-            static_cast<QObjectOwnQThread*>(varUserData)->insert(argT);
+            varUserData.first->insert(argT);
         } else {
-            static_cast<QObjectOwnQThread*>(varUserData)->remove(argT);
+            varUserData.first->remove(argT);
         }
 
     }
@@ -263,32 +229,4 @@ namespace sstd {
 
 }/*namespace sstd*/
 
-namespace _theSSTDLibraryMemoryFile {
 
-    inline uint threadObjectID() {
-        static const uint varAns = []() ->uint{
-            auto varAns =
-                sstd::QObjectOwnQThread::getID();
-            varAns= QObject::registerUserData();
-            return varAns;
-        }();
-        return varAns;
-    }
-
-    template<typename mutex, std::size_t N, std::size_t M >
-    inline mutex & getThreadObjectMutex(QThread * arg) {
-        using mutex_array_type = std::array< mutex, 1 << N >;
-        static mutex_array_type * varMutex =/*never delete*/
-            sstd_new<mutex_array_type>();
-        auto var =
-            reinterpret_cast<std::uintptr_t>(arg);
-        var >>= M;
-        var &= ((1 << N) - 1);
-        return (*varMutex)[var];
-    }
-
-    inline Mutex & getThreadObjectMutex(QThread *arg) {
-        return getThreadObjectMutex<Mutex, 7, 2>(arg);
-    }
-
-}/*namespace _theSSTDLibraryMemoryFile*/
