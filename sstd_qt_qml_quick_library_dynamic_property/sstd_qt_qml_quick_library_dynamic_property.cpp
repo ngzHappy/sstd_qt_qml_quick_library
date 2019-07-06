@@ -13,6 +13,7 @@ namespace sstd{
         return varAns;
     }
 
+    /*必须是2的整数倍*/
     inline constexpr int theMutexSize(){
         return 256;
     }
@@ -47,20 +48,20 @@ namespace sstd{
 #endif
 
 
-    SSTD_QT_SYMBOL_DECL std::shared_ptr<DynamicPropertyMap> getDynamicPropertyMap(QObject * arg){
+    SSTD_QT_SYMBOL_DECL DynamicPropertyMap * getDynamicPropertyMap(QObject * arg){
 
         if( arg == nullptr ){
             return {};
         }
 
         auto varMutex = theMutex(arg);
-        auto varID = theObjectID() ;
+        const auto varID = theObjectID() ;
 
         {
             std::shared_lock varReadLock{*varMutex};
             auto varUserData = static_cast<DynamicPropertyMap *>( arg->userData( varID ) );
             if(varUserData){
-                return varUserData->thisData;
+                return varUserData ;
             }
         }
 
@@ -68,15 +69,20 @@ namespace sstd{
         {
             auto varUserData = static_cast<DynamicPropertyMap *>( arg->userData( varID ) );
             if(varUserData){
-                return varUserData->thisData;
+                return varUserData;
             }
         }
 
-        auto varProperty = sstd_make_shared<DynamicPropertyMap>();
-        varProperty->thisData = varProperty;
-        arg->setUserData( varID, varProperty.get() );
-        return std::move(varProperty);
+        auto varProperty = sstd_new<DynamicPropertyMap>();
+        arg->setUserData( varID, varProperty );
+        return varProperty;
 
+    }
+
+    bool DynamicPropertyMap::has(const DynamicPropertyMapKey & arg) const{
+        std::shared_lock varRead{ thisMutex };
+        auto varPos = thisMap.find(arg);
+        return varPos!=thisMap.end();
     }
 
     std::shared_ptr<QObjectUserData> DynamicPropertyMap::get(const DynamicPropertyMapKey & arg) const{

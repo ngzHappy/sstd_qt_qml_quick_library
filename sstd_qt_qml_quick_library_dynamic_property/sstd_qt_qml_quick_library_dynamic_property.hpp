@@ -13,15 +13,18 @@ namespace sstd{
         SSTD_QT_SYMBOL_DECL Mutex * mutex();
         SSTD_QT_SYMBOL_DECL int mutex_size();
         SSTD_QT_SYMBOL_DECL uint object_id();
+        enum class KnowDynamicPropertyMapKey : std::uint32_t {
+            QThreadDataKey,
+        };
     }/*\uacae_dynamic_property_detail*/
 #endif
 
-    enum class KnowDynamicPropertyMapKey{
-        QThreadDataKey,
-    };
-
+#ifndef Q_MOC_RUN
     using DynamicPropertyMapKeyDetail =
-    std::variant< std::uintptr_t, QString ,KnowDynamicPropertyMapKey>;
+    std::variant< std::intptr_t ,
+    QString ,
+    \uacae_dynamic_property_detail::KnowDynamicPropertyMapKey>;
+#endif
 
     class DynamicPropertyMapKey :
             public DynamicPropertyMapKeyDetail {
@@ -29,25 +32,29 @@ namespace sstd{
     public:
         inline DynamicPropertyMapKey(){
         }
-        inline DynamicPropertyMapKey(std::uintptr_t arg) : Super(arg){
+        inline DynamicPropertyMapKey(std::intptr_t arg) : Super(arg){
         }
         inline DynamicPropertyMapKey(QString arg) : Super(std::move(arg)){
         }
+#ifndef Q_MOC_RUN
+        inline DynamicPropertyMapKey(\uacae_dynamic_property_detail::KnowDynamicPropertyMapKey arg):Super(arg){
+        }
+#endif
     private:
         sstd_class(DynamicPropertyMapKey);
     };
 
     class DynamicPropertyMap;
-    SSTD_QT_SYMBOL_DECL std::shared_ptr<DynamicPropertyMap> getDynamicPropertyMap(QObject *);
+    SSTD_QT_SYMBOL_DECL DynamicPropertyMap * getDynamicPropertyMap(QObject *);
 
     class SSTD_QT_SYMBOL_DECL DynamicPropertyMap final :
             public QObjectUserData {
     public:
+        bool has(const DynamicPropertyMapKey &) const;
         std::shared_ptr<QObjectUserData> get(const DynamicPropertyMapKey &) const;
         void put(const DynamicPropertyMapKey &,std::shared_ptr<QObjectUserData>);
     private:
-        std::shared_ptr<DynamicPropertyMap> thisData;
-        friend std::shared_ptr<DynamicPropertyMap> getDynamicPropertyMap(QObject *);
+        friend DynamicPropertyMap * getDynamicPropertyMap(QObject *);
         mutable std::shared_mutex thisMutex;
         using Map = std::map< DynamicPropertyMapKey,
         std::shared_ptr<QObjectUserData>,
