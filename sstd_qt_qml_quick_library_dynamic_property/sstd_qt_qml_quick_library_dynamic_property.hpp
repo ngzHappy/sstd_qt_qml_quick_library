@@ -27,6 +27,8 @@ namespace sstd{
     \uacae_dynamic_property_detail::KnowDynamicPropertyMapKey>;
 #endif
 
+    SSTD_QT_SYMBOL_DECL std::intptr_t registerDynamicPropertyMapKey();
+
     class DynamicPropertyMapKey :
             public DynamicPropertyMapKeyDetail {
         using Super = DynamicPropertyMapKeyDetail;

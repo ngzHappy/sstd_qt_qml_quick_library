@@ -112,5 +112,10 @@ namespace sstd{
         thisMap.clear();
     }
 
+    SSTD_QT_SYMBOL_DECL std::intptr_t registerDynamicPropertyMapKey(){
+        static std::atomic< std::intptr_t > globalAns;
+        return ++globalAns;
+    }
+
 }/*namespce sstd*/
 
