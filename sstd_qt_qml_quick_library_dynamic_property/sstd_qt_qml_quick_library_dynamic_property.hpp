@@ -51,6 +51,7 @@ namespace sstd{
             public QObjectUserData {
     public:
         bool has(const DynamicPropertyMapKey &) const;
+        void erase(const DynamicPropertyMapKey &);
         std::shared_ptr<QObjectUserData> get(const DynamicPropertyMapKey &) const;
         void put(const DynamicPropertyMapKey &,std::shared_ptr<QObjectUserData>);
     private:

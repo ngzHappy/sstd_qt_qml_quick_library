@@ -94,6 +94,11 @@ namespace sstd{
         return varPos->second;
     }
 
+    void DynamicPropertyMap::erase(const DynamicPropertyMapKey & arg){
+        std::unique_lock varWrite{ thisMutex };
+        thisMap.erase(arg);
+    }
+
     void DynamicPropertyMap::put(const DynamicPropertyMapKey & arg,std::shared_ptr<QObjectUserData> argV){
         std::unique_lock varWrite{ thisMutex };
         thisMap[arg]=std::move(argV);
