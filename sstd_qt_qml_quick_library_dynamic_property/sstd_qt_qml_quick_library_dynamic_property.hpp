@@ -64,7 +64,7 @@ public:
     DynamicPropertyMap();
     ~DynamicPropertyMap();
 private:
-    friend DynamicPropertyMap * getDynamicPropertyMap(QObject *);
+    friend SSTD_QT_SYMBOL_DECL DynamicPropertyMap * getDynamicPropertyMap(QObject *);
     mutable std::shared_mutex thisMutex;
     using Map = std::map< DynamicPropertyMapKey,
     OwnThisQObjectUserDataPointer,
