@@ -23,3 +23,5 @@ namespace _theSSTDQtQmlQuickLibraryFile {
 #include "sstd_qt_qml_quick_library_path/sstd_qt_qml_quick_library_path.hpp"
 #include "sstd_qt_qml_quick_library_checked_load_qml_file/sstd_qt_qml_quick_library_checked_load_qml_file.hpp"
 #include "sstd_qt_qml_quick_library_dynamic_property/sstd_qt_qml_quick_library_dynamic_property.hpp"
+#include "sstd_qt_qml_quick_library_cosmetic_pen.hpp"
+
