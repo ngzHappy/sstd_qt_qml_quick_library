@@ -1,6 +1,7 @@
 
 QT += gui
 QT += qml
+QT += svg
 QT += core
 QT += quick
 QT += widgets
