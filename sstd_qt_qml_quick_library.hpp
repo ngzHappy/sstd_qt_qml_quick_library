@@ -4,6 +4,7 @@ namespace _theSSTDQtQmlQuickLibraryFile {
 }/*_theSSTDQtQmlQuickLibraryFile*/
 
 #include <QtGui/QtGui>
+#include <QtSvg/QtSvg>
 #include <QtQml/QtQml>
 #include <QtCore/QtCore>
 #include <QtQuick/QtQuick>
