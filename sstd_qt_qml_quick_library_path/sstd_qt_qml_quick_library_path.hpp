@@ -32,7 +32,11 @@ namespace sstd {
     inline QString replaceFileName(const char * argV, const QString & arg) {
 #if defined(_DEBUG) && defined(CURRENT_DEBUG_PATH)
         sstd::filesystem::path varPath{ CURRENT_DEBUG_PATH };
-        auto varWString = arg.toStdWString();
+        const auto varLength = static_cast<std::size_t>(arg.size());
+        std::wstring varWString;
+        varWString.resize(1 + varLength);
+        arg.toWCharArray(varWString.data());
+        varWString.resize(varLength);
         assert((varWString.size() - static_cast<std::size_t>(arg.size())) < 1024u);
         varPath /= std::move(varWString);
         (void)argV;
@@ -63,16 +67,16 @@ namespace sstd {
 #else
             return varDir.absoluteFilePath(QStringLiteral("theqml"));
 #endif
-        }();
-        QString varStr = arg;
-        const static auto varReg = QRegularExpression(QStringLiteral("_the_debug"),
-            QRegularExpression::CaseInsensitiveOption);
-        varStr.replace(varReg, QStringLiteral(""));
-        if constexpr (std::is_same_v<U, QString>) {
-            return getLocalFileFullFilePath(varStr, varDir);
-        } else if constexpr (std::is_same_v<U, QUrl>) {
-            return getLocalFileFullPath(varStr, varDir);
-        }
+    }();
+    QString varStr = arg;
+    const static auto varReg = QRegularExpression(QStringLiteral("_the_debug"),
+        QRegularExpression::CaseInsensitiveOption);
+    varStr.replace(varReg, QStringLiteral(""));
+    if constexpr (std::is_same_v<U, QString>) {
+        return getLocalFileFullFilePath(varStr, varDir);
+    } else if constexpr (std::is_same_v<U, QUrl>) {
+        return getLocalFileFullPath(varStr, varDir);
     }
+}
 
 }/*namespace sstd*/
