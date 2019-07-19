@@ -33,7 +33,7 @@ namespace sstd {
 #if defined(_DEBUG) && defined(CURRENT_DEBUG_PATH)
         sstd::filesystem::path varPath{ CURRENT_DEBUG_PATH };
         auto varWString = arg.toStdWString();
-        assert((varWString.size() - static_cast<std::size_t>(arg.size())) > 1);
+        assert((varWString.size() - static_cast<std::size_t>(arg.size())) < 1024);
         varPath /= std::move(varWString);
         (void)argV;
 #else
