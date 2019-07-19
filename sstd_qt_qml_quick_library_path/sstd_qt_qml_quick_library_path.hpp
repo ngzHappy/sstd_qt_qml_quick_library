@@ -32,7 +32,9 @@ namespace sstd {
     inline QString replaceFileName(const char * argV, const QString & arg) {
 #if defined(_DEBUG) && defined(CURRENT_DEBUG_PATH)
         sstd::filesystem::path varPath{ CURRENT_DEBUG_PATH };
-        varPath /= arg.toStdWString();
+        auto varWString = arg.toStdWString();
+        assert((varWString.size() - static_cast<std::size_t>(arg.size())) > 1);
+        varPath /= std::move(varWString);
         (void)argV;
 #else
         sstd::filesystem::path varPath{ argV };
