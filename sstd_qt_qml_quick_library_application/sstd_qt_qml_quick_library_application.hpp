@@ -8,7 +8,7 @@ namespace sstd {
     class SSTD_QT_SYMBOL_DECL BeforeAfterQtApplication {
         friend class BeforeAfterQtApplicationControl;
     public:
-        BeforeAfterQtApplication(QString = {});
+        BeforeAfterQtApplication(const QString = {});
         ~BeforeAfterQtApplication();
     private:
         void construct(const char *);
