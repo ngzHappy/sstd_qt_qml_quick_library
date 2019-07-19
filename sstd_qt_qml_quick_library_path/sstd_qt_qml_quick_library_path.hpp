@@ -48,7 +48,8 @@ namespace sstd {
         varPath = varPath.parent_path() / varWString();
 #endif
         const auto varWStringAns = varPath.wstring();
-        return QString::fromStdWString(varWStringAns);
+        return QString::fromWCharArray(varWStringAns.c_str(), 
+            static_cast<int>(varWStringAns.size()));
     }
 
     template<typename T>

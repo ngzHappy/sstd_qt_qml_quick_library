@@ -81,7 +81,7 @@ namespace sstd {
     }
 
     /*this function will call before QtApplication construct*/
-    BeforeAfterQtApplication::BeforeAfterQtApplication(QString argStyle) {
+    BeforeAfterQtApplication::BeforeAfterQtApplication(const QString argStyle) {
         /*设置样式*/
         if (!argStyle.isEmpty()) {
             const auto varStypeFileName = argStyle.toLocal8Bit();
