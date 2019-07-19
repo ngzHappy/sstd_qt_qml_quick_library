@@ -30,21 +30,25 @@ namespace sstd {
 
     /*qApp未初始化时使用*/
     inline QString replaceFileName(const char * argV, const QString & arg) {
+        auto varWString = [arg]()->std::wstring {
+            const auto varLength = static_cast<std::size_t>(arg.size());
+            std::wstring varWString;
+            varWString.resize(1 + varLength);
+            arg.toWCharArray(varWString.data());
+            varWString.resize(varLength);
+            assert((varWString.size() - static_cast<std::size_t>(arg.size())) < 1024u);
+            return std::move(varWString);
+        };
 #if defined(_DEBUG) && defined(CURRENT_DEBUG_PATH)
         sstd::filesystem::path varPath{ CURRENT_DEBUG_PATH };
-        const auto varLength = static_cast<std::size_t>(arg.size());
-        std::wstring varWString;
-        varWString.resize(1 + varLength);
-        arg.toWCharArray(varWString.data());
-        varWString.resize(varLength);
-        assert((varWString.size() - static_cast<std::size_t>(arg.size())) < 1024u);
-        varPath /= std::move(varWString);
+        varPath /= varWString();
         (void)argV;
 #else
         sstd::filesystem::path varPath{ argV };
-        varPath = varPath.parent_path() / arg.toStdWString();
+        varPath = varPath.parent_path() / varWString();
 #endif
-        return QString::fromStdWString(varPath.wstring());
+        const auto varWStringAns = varPath.wstring();
+        return QString::fromStdWString(varWStringAns);
     }
 
     template<typename T>
