@@ -31,10 +31,13 @@ namespace sstd {
     /*qApp未初始化时使用*/
     inline QString replaceFileName(const char * argV, const QString & arg) {
         auto varWString = [arg]()->std::wstring {
-            const auto varLength = static_cast<std::size_t>(arg.size());
+            if (arg.isEmpty()) {
+                return{};
+            }
+            auto varLength = static_cast<std::size_t>(arg.size());
             std::wstring varWString;
             varWString.resize(1 + varLength);
-            arg.toWCharArray(varWString.data());
+            varLength = static_cast<std::size_t>(arg.toWCharArray(varWString.data()));
             varWString.resize(varLength);
             assert((varWString.size() - static_cast<std::size_t>(arg.size())) < 1024u);
             return std::move(varWString);
@@ -48,9 +51,9 @@ namespace sstd {
         varPath = varPath.parent_path() / varWString();
 #endif
         const auto varWStringAns = varPath.wstring();
-        return QString::fromWCharArray(varWStringAns.c_str(), 
+        return QString::fromWCharArray(varWStringAns.c_str(),
             static_cast<int>(varWStringAns.size()));
-    }
+        }
 
     template<typename T>
     inline std::remove_reference_t<T> autoLocalPath(const QString & arg) {
@@ -82,6 +85,6 @@ namespace sstd {
     } else if constexpr (std::is_same_v<U, QUrl>) {
         return getLocalFileFullPath(varStr, varDir);
     }
-}
+    }
 
 }/*namespace sstd*/
